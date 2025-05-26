@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=windows-1252" http-equiv="content-type">
+    <meta http-equiv="refresh" content="30; url=https://observatory.geophysik.uni-muenchen.de/seismology/stations/ROMY-Monitor/ROMY_monitor_6.html">
+    <title>ROMY-Monitor</title>
+    <style>
+      .frame {
+        width: 100%;
+        max-width: 1920px;
+        margin: 0 auto;
+        padding: 10px;
+      }
+      
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+      
+      .panel {
+        flex: 1;
+        min-width: 45%;
+        max-width: 48%;
+        text-align: center;
+      }
+      
+      .panel img {
+        width: 100%;
+        height: auto;
+        border: 1px solid #ccc;
+      }
+      
+      .title {
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        margin: 5px 0;
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="frame">
+      <div class="row">
+        <div class="panel">
+          <div class="title">ROMY-Z</div>
+          <img src="figures/html_sagnacspectra_RZ.png"
+               alt="ROMY-Z" 
+               onerror="this.src='figures/old/oops.png'">
+        </div>
+        <div class="panel">
+          <div class="title">ROMY-U</div>
+          <img src="figures/html_sagnacspectra_RU.png"
+               alt="ROMY-U" 
+               onerror="this.src='figures/old/oops.png'">
+        </div>
+      </div>
+      <div class="row">
+        <div class="panel">
+          <div class="title">ROMY-V</div>
+          <img src="figures/html_sagnacspectra_RV.png"
+               alt="ROMY-V" 
+               onerror="this.src='figures/old/oops.png'">
+        </div>
+        <div class="panel">
+          <div class="title">ROMY-W</div>
+          <img src="figures/html_sagnacspectra_RW.png"
+               alt="ROMY-W" 
+               onerror="this.src='figures/old/oops.png'">
+        </div>
+      </div>
+    </div>
+  </body>
+</html> 

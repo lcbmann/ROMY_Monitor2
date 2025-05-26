@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=windows-1252" http-equiv="content-type">
+    <meta http-equiv="refresh" content="60"; url=ROMY_monitor_1.html">
+    <title>ROMY-Monitor</title>
+    <link rel="stylesheet" href="monitor1.css">  
+  </head>
+  <body>
+    <script>
+        setInterval( function(){
+            var dt = new Date(new Date().toUTCString().substr(0, 25));
+            document.getElementById("datetime").innerHTML = (("0"+dt.getDate()).slice(-2)) +"."+ (("0"+(dt.getMonth()+1)).slice(-2)) +"."+ (dt.getFullYear()) +" "+(("0"+dt.getHours()).slice(-2)) +":"+ (("0"+dt.getMinutes()).slice(-2)) +":"+ (("0"+dt.getSeconds()).slice(-2)) +"UTC";}, 1000);
+	</script>
+
+    <div class="panel1">
+        <img src="figures/html_array_plots.png"
+             alt="ARRAY PLOT" 
+             onerror="this.src='figures/error_array.png'" >
+    </div> 
+
+    <div class="panel2">
+        <img src="figures/html_romy_plots.png"
+             alt="ROMY PLOT" 
+             onerror="this.src='figures/error_romy.png'" >
+    </div> 
+
+	<div class="panel-time">
+	    <p><font size="6"><span id="datetime"></span></font></p>
+	</div>
+
+  </body>
+</html>
+

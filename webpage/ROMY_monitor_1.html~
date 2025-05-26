@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=windows-1252" http-equiv="content-type">
+    <meta http-equiv="refresh" content="30; url=https://observatory.geophysik.uni-muenchen.de/seismology/stations/ROMY-Monitor/ROMY_monitor_2.html">
+    <title>ROMY-Monitor</title>
+    <link rel="stylesheet" href="monitor1.css">
+  </head>
+  <body>
+   <div class="frame">
+    <div class="row">
+      <div class="panel1">
+        <img src="../figures/html_beamwalk.png"
+             alt="Beam Walk" 
+             onerror="this.src='figures/old/error.png'">
+      </div>
+    </div>
+   </div>
+  </body>
+</html>

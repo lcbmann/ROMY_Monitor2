@@ -251,7 +251,7 @@ for _cam in config['cameras']:
     try:
         ids[_cam] = __load_beam_wander_data(config['tbeg'].date,
                                             config['tend'].date,
-                                            config['path_to_data'],
+                                            config['path_to_data']+f"data{_cam}/",
                                             _cam
                                            )
     except Exception as e:

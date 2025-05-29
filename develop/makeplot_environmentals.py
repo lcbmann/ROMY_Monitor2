@@ -512,7 +512,7 @@ def processing(_bw, cam):
     return _bw
 
 
-# In[24]:
+# In[40]:
 
 
 bws = []
@@ -574,7 +574,7 @@ except:
 
 # ## Plotting
 
-# In[27]:
+# In[52]:
 
 
 def __makeplot(bws):
@@ -654,6 +654,7 @@ def __makeplot(bws):
         ax11.set_yticks(np.linspace(ax11.get_yticks()[0], ax11.get_yticks()[-1], len(ax[1].get_yticks())))
 
         ax11.legend(loc='best', ncol=1, fontsize=font-1)
+        ax[1].legend(loc='best', ncol=4, fontsize=font-1)
 
     except:
         pass
@@ -681,6 +682,8 @@ def __makeplot(bws):
         ax[2].set_yticks(np.linspace(ax[2].get_yticks()[0], ax[2].get_yticks()[-1], len(ax[2].get_yticks())))
         ax22.set_yticks(np.linspace(ax22.get_yticks()[0], ax22.get_yticks()[-1], len(ax[2].get_yticks())))
         # ax22.set_zorder(2)
+        ax[0].legend(loc='best', ncol=4, fontsize=font-1)
+
     except:
         pass
 
@@ -718,6 +721,7 @@ def __makeplot(bws):
         y_max = max(np.nanpercentile(tromyN_smooth, 99)*1e6, np.nanpercentile(tromyE_smooth, 99)*1e6)
         y_min = min(np.nanpercentile(tromyN_smooth, 1)*1e6, np.nanpercentile(tromyE_smooth, 1)*1e6)
         ax[3].set_ylim(y_min*1.2, y_max*1.2)
+        ax[3].legend(loc='best', ncol=2, fontsize=font-1)
     except:
         pass
 
@@ -736,6 +740,7 @@ def __makeplot(bws):
                   )
 
         ax[4].set_ylabel("Differential \n Pressure (Pa)", fontsize=font)
+        ax[4].legend(loc='best', ncol=1, fontsize=font-1)
 
         ax41 = ax[4].twinx()
         ax41.plot(ffbi.select(channel="*O")[0].times(reftime=ref_date),
@@ -762,24 +767,24 @@ def __makeplot(bws):
     # _____________________________________________________________________________________
 
     for i, bw in enumerate(bws):
-        # try:
-        p = ax[5].plot(bw.time_utc - ref_date,
-                    bw.x_mm*1e3,
-                    label=f"IDS{config['cameras'][i]}-X",
-                    zorder=2,
-                    ls="--",
-                )
+        try:
+            p = ax[5].plot(bw.time_utc - ref_date,
+                        bw.x_mm*1e3,
+                        label=f"IDS{config['cameras'][i]}-X",
+                        zorder=2,
+                        ls="--",
+                    )
 
-        ax[5].plot(bw.time_utc - ref_date,
-                    bw.y_mm*1e3,
-                    label=f"IDS{config['cameras'][i]}-Y",
-                    color=p[0].get_color(),
-                    zorder=2,
-                )
-        # except Exception as e:
-        #     print(f"error {i}: {bw}")
-        #     print(e)
-        #     pass
+            ax[5].plot(bw.time_utc - ref_date,
+                        bw.y_mm*1e3,
+                        label=f"IDS{config['cameras'][i]}-Y",
+                        color=p[0].get_color(),
+                        zorder=2,
+                    )
+        except Exception as e:
+            print(f"error {i}: {bw}")
+            print(e)
+            pass
 
     try:
         ax[5].set_ylabel("rel. Beam \n Position ($\mu$m)", fontsize=font)
@@ -787,6 +792,7 @@ def __makeplot(bws):
         bws = [bw.x_mm*1e3 for bw in bws] + [bw.y_mm*1e3 for bw in bws]
         bw_min, bw_max = __find_max_min(bws, 99)
         ax[5].set_ylim(bw_min, bw_max)
+        ax[5].legend(loc='best', ncol=len(bws), fontsize=font-1)
     except Exception as e:
         print(e)
         pass
@@ -806,11 +812,6 @@ def __makeplot(bws):
             lx2_sec = lx2-UTCDateTime(ref_date)
             ax[_n].fill_betweenx([_ymin, _ymax], lx1_sec*time_scaling, lx2_sec*time_scaling, color="yellow", alpha=0.5)
 
-    ax[0].legend(loc='best', ncol=4, fontsize=font-1)
-    ax[1].legend(loc='best', ncol=4, fontsize=font-1)
-    ax[3].legend(loc='best', ncol=2, fontsize=font-1)
-    ax[4].legend(loc='best', ncol=1, fontsize=font-1)
-    ax[5].legend(loc='best', ncol=len(bws), fontsize=font-1)
 
     # add dates for x-axis
     try:
@@ -828,7 +829,7 @@ def __makeplot(bws):
     return fig
 
 
-# In[28]:
+# In[53]:
 
 
 fig = __makeplot(bws);

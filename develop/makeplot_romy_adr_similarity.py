@@ -13,7 +13,7 @@ import obspy as obs
 import matplotlib.pyplot as plt
 import numpy as np
 
-from andbro__read_sds import __read_sds
+from functions.read_sds import __read_sds
 
 
 # In[31]:
@@ -46,6 +46,13 @@ elif os.uname().nodename in ['lin-ffb-01', 'ambrym', 'hochfelln']:
 
 # In[36]:
 
+
+sys.argv
+
+
+# In[37]:
+
+
 config = {}
 
 # output path for figures
@@ -62,7 +69,7 @@ config['path_to_data'] = data_path+"romy_events/data/"
 config['path_to_sds'] = archive_path+"temp_archive/"
 
 # time range for loading data
-if len(sys.argv) > 1:
+if len(sys.argv) > 2:
     config['tbeg'] = obs.UTCDateTime(sys.argv[1])
     config['tend'] = obs.UTCDateTime(sys.argv[1]) + 86400
 else:
@@ -517,7 +524,7 @@ results, fig_timeseries = __compute_windowed_cross_correlation_analysis(
     fmax=config['fmax']
 )
 
-fig_timeseries.savefig(config['path_to_figs']+"makeplot_romy_adr_test.png")
+fig_timeseries.savefig(config['path_to_figs']+"html_romy_adr_similarity.png")
 
 
 # In[28]:
@@ -794,7 +801,7 @@ def __compute_windowed_cross_correlation_analysis(st, seeds_loc1, seeds_loc2, tw
     title += f'fmin: {fmin} - {fmax} Hz, Window: {twin}s ({nwin} samples), Overlap: {overlap*100:.0f}%'
     
     plt.suptitle(title, fontsize=14)
-#    plt.tight_layout(rect=[0, 0, 1, 0.94])
+    plt.tight_layout(rect=[0, 0, 1, 0.94])
     
     return results, fig
 
@@ -802,19 +809,19 @@ def __compute_windowed_cross_correlation_analysis(st, seeds_loc1, seeds_loc2, tw
 # In[ ]:
 
 
-results, fig_timeseries = __compute_windowed_cross_correlation_analysis(
-    st, 
-    config['romy_seeds'], 
-    config['adr_seeds'],
-    twin=config['twin'],  # seconds
-    overlap=config['overlap'],  # % overlap
-    location_labels=['BW.ROMY.00', 'BW.ROMY.22'],
-    tunit=config['time_unit'],
-    fmin=config['fmin'],
-    fmax=config['fmax']
-)
+# results, fig_timeseries = __compute_windowed_cross_correlation_analysis(
+#     st, 
+#     config['romy_seeds'], 
+#     config['adr_seeds'],
+#     twin=config['twin'],  # seconds
+#     overlap=config['overlap'],  # % overlap
+#     location_labels=['BW.ROMY.00', 'BW.ROMY.22'],
+#     tunit=config['time_unit'],
+#     fmin=config['fmin'],
+#     fmax=config['fmax']
+# )
 
-fig_timeseries.savefig(config['path_to_figs']+"makeplot_romy_adr.png")
+# fig_timeseries.savefig(config['path_to_figs']+"html_romy_adr_similarity.png")
 
 
 # In[ ]:

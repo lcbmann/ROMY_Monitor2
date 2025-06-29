@@ -36,7 +36,7 @@ import matplotlib.pyplot as plt
 DS1054Z_IP = "10.153.82.107"
 
 # specify path to save images
-path_to_images = "/freenas-ffb-01/romy_html_monitor/figures/"
+path_to_images = "../figures/"
 
 
 # oscilloscope settings

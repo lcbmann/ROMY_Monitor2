@@ -3,12 +3,7 @@
 
 # # Plot of Sagnac Drift of Rings
 
-# 
-
 # ## Imports
-
-# In[2]:
-
 
 import os
 import gc
@@ -18,10 +13,6 @@ import numpy as np
 from datetime import datetime, date
 from pandas import DataFrame, read_pickle, date_range, concat, read_csv
 from obspy import UTCDateTime, read, Trace, Stream, read_inventory
-
-
-# In[3]:
-
 
 from functions.get_mlti_intervals import __get_mlti_intervals
 from functions.mlti_intervals_to_NaN import __mlti_intervals_to_NaN
@@ -35,37 +26,24 @@ from functions.find_max_min import __find_max_min
 from functions.find_labels import __find_lables
 from functions.read_sds import __read_sds
 
+# --- Path Setup for Portability ---
 
-# In[4]:
+# Set up workspace root
+root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
+# Set up all relevant directories relative to workspace root
+figures_dir = os.path.join(root_path, "figures")
+temp_archive_dir = os.path.join(root_path, "temp_archive")
+romy_archive_dir = os.path.join(root_path, "romy_archive")
+romy_autodata_dir = os.path.join(root_path, "romy_autodata")
 
-if os.uname().nodename == 'lighthouse':
-    root_path = '/home/andbro/'
-    data_path = '/home/andbro/kilauea-data/'
-    archive_path = '/home/andbro/freenas/'
-    bay_path = '/home/andbro/bay200/'
-elif os.uname().nodename == 'kilauea':
-    root_path = '/home/brotzer/'
-    data_path = '/import/kilauea-data/'
-    archive_path = '/import/freenas-ffb-01-data/'
-    bay_path = '/bay200/'
-elif os.uname().nodename == 'teide':
-    root_path = '/home/sysopromy/'
-    data_path = '/freenas-ffb-01/'
-    archive_path = '/freenas-ffb-01/'
-    bay_path = '/bay200/'
-    lamont_path = '/lamont/'
-elif os.uname().nodename in ['lin-ffb-01', 'ambrym', 'hochfelln']:
-    root_path = '/home/brotzer/'
-    data_path = '/import/kilauea-data/'
-    archive_path = '/import/freenas-ffb-01-data/'
-    bay_path = '/bay200/'
-
+# Create output directories if they don't exist
+os.makedirs(figures_dir, exist_ok=True)
+os.makedirs(temp_archive_dir, exist_ok=True)
+os.makedirs(romy_archive_dir, exist_ok=True)
+os.makedirs(romy_autodata_dir, exist_ok=True)
 
 # ## Configurations
-
-# In[14]:
-
 
 config = {}
 
@@ -85,22 +63,15 @@ Vlower, Vupper = 447.65, 447.90
 Wlower, Wupper = 447.65, 447.90
 
 # specify path to data
-config['path_to_sds'] = archive_path+"romy_archive/"
-
-# path to Sagnac beat data
-config['path_to_sds'] = archive_path+f"temp_archive/"
+config['path_to_sds'] = temp_archive_dir + "/"
 
 # path to figure output
-config['path_to_figs'] = archive_path+f"romy_html_monitor/figures/"
+config['path_to_figs'] = figures_dir + "/"
 
 # set colors
 config['colors'] = {"Z": "tab:orange", "U":"deeppink", "V":"tab:blue", "W":"darkblue"}
 
-
-# ### Load beat data
-
-# In[6]:
-
+# --- Data Loading ---
 
 try:
     beatZ = __read_sds(config['path_to_sds'], "BW.ROMY.XX.LJZ", config['tbeg'], config['tend'])
@@ -119,146 +90,82 @@ try:
 except:
     beatW = Stream()
 
-
-# ### Load Maintenance LXX log
-
-# In[7]:
-
+# --- Load Maintenance LXX log ---
 
 try:
     # load log file
-    lxx = __load_lxx(config['tbeg'], config['tend'], archive_path)
-
+    lxx = __load_lxx(config['tbeg'], config['tend'], root_path)
     # get intervals of maintenance work as utc times
     lxx_t1, lxx_t2 = __get_lxx_intervals(lxx.datetime)
-
 except Exception as e:
     print(e)
     print(f" -> failed to load maintenance log")
+    lxx_t1, lxx_t2 = [], []
 
-
-# ### Remove MLTI times
-
-# In[8]:
-
+# --- Remove MLTI times ---
 
 try:
-    # load mlti log
-    mltiU = __load_mlti(config['tbeg'], config['tend'], "U", archive_path)
-
-    # extract time intervals
+    mltiU = __load_mlti(config['tbeg'], config['tend'], "U", root_path)
     mltiU_t1, mltiU_t2 = __get_mlti_intervals(mltiU.time_utc)
-
-    # set MLTI intervals to NaN
-    # beatU = __mlti_intervals_to_NaN(beatU, "fj", "times_utc", mltiU_t1, mltiU_t2, t_offset_sec=180)
-
-    # interpolate NaN values
-    # beatU['fj_inter'] = __interpolate_nan(np.array(beatU.fj_nan))
-
 except:
     print(f" -> failed to load mlti log for RU")
-
-
-# In[9]:
-
+    mltiU_t1, mltiU_t2 = [], []
 
 try:
-    # load mlti log
-    mltiZ = __load_mlti(config['tbeg'], config['tend'], "Z", archive_path)
-
-    # extract time intervals
+    mltiZ = __load_mlti(config['tbeg'], config['tend'], "Z", root_path)
     mltiZ_t1, mltiZ_t2 = __get_mlti_intervals(mltiZ.time_utc)
-
-    # set MLTI intervals to NaN
-    # beatZ = __mlti_intervals_to_NaN(beatZ, "fj", "times_utc", mltiZ_t1, mltiZ_t2, t_offset_sec=180)
-
-    # interpolate NaN values
-    # beatZ['fj_inter'] = __interpolate_nan(np.array(beatZ.fj_nan))
-
 except:
     print(f" -> failed to load mlti log for RZ")
-
-
-# In[10]:
-
+    mltiZ_t1, mltiZ_t2 = [], []
 
 try:
-    # load mlti log
-    mltiV = __load_mlti(config['tbeg'], config['tend'], "V", archive_path)
-
-    # extract time intervals
+    mltiV = __load_mlti(config['tbeg'], config['tend'], "V", root_path)
     mltiV_t1, mltiV_t2 = __get_mlti_intervals(mltiV.time_utc)
-
-    # set MLTI intervals to NaN
-    # beatV = __mlti_intervals_to_NaN(beatV, "fj", "times_utc", mltiV_t1, mltiV_t2, t_offset_sec=180)
-
-    # interpolate NaN values
-    # beatV['fj_inter'] = __interpolate_nan(np.array(beatV.fj_nan))
-
 except Exception as e:
     print(f" -> failed to load mlti log for RV")
     print(e)
+    mltiV_t1, mltiV_t2 = [], []
 
-
-# ### Get MLTI statistics
-
-# In[11]:
-
+# --- Get MLTI statistics ---
 
 try:
     mlti_statsU = __get_mlti_statistics(mltiU, config['tbeg'], config['tend'],
                                         intervals=True, plot=False, ylog=False
                                        )
-
     mlti_statsU["mlti_series_avg"] = __smooth(mlti_statsU["mlti_series"]*30, 86400, win="boxcar")*100
-
 except Exception as e:
     print(e)
     print(f" -> failed to get MLTI statistics for RU")
+    mlti_statsU = {}
 
 try:
     mlti_statsV = __get_mlti_statistics(mltiV, config['tbeg'], config['tend'],
                                         intervals=True, plot=False, ylog=False
                                        )
-
     mlti_statsV["mlti_series_avg"] = __smooth(mlti_statsV["mlti_series"]*30, 86400, win="boxcar")*100
-
 except Exception as e:
     print(e)
     print(f" -> failed to get MLTI statistics for RV")
+    mlti_statsV = {}
 
 try:
     mlti_statsZ = __get_mlti_statistics(mltiZ, config['tbeg'], config['tend'],
                                         intervals=True, plot=False, ylog=False
                                        )
-
     mlti_statsZ["mlti_series_avg"] = __smooth(mlti_statsZ["mlti_series"]*30, 86400, win="boxcar")*100
-
 except Exception as e:
     print(e)
     print(f" -> failed to get MLTI statistics for RZ")
+    mlti_statsZ = {}
 
-
-
-# ## Smoothing
-
-# ## Plotting
-
-# In[12]:
-
+# --- Plotting Function (unchanged) ---
 
 def __makeplot():
-
     Nrow, Ncol = 5, 1
-
     font = 12
-
     ref_date = config['tbeg']
-
     fig, ax = plt.subplots(Nrow, Ncol, figsize=(10, 7), sharex=True)
-
     plt.subplots_adjust(hspace=0.1)
-
     time_scaling = 1
 
     # Z ring plot
@@ -521,18 +428,9 @@ def __makeplot():
     # plt.show();
     return fig
 
-
-# In[15]:
-
-
-fig = __makeplot();
-
-fig.savefig(config['path_to_figs']+f"html_beatdrift.png", format="png", dpi=150, bbox_inches='tight')
-
+fig = __makeplot()
+fig.savefig(os.path.join(config['path_to_figs'], "html_beatdrift.png"), format="png", dpi=150, bbox_inches='tight')
 del fig
-
-
-# In[ ]:
 
 
 

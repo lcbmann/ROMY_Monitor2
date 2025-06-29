@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ROMY Monitor Test Display</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="monitor_test.css">
+</head>
+<body>
+    <header>
+        <h1>ROMY Ring Laser Monitor</h1>
+        <p>Real-time health status and signals overview</p>
+        <p>Test Website</p>
+    </header>
+    <nav>
+        <a href="#">Main</a>
+        <a href="#">Beam Wander</a>
+        <a href="#">Temperature</a>
+        <a href="#">Pressure/Tilt</a>
+        <a href="#">Helicorder</a>
+        <a href="#">Water Level</a>
+        <a href="#">(other useful links here?)</a>
+    </nav>
+    <main>
+        <div class="section">
+            <div class="section-title">Overview</div>
+            <div class="plots">
+                <div class="plot-card">
+                    <div class="plot-title">Sagnac Spectra (Z Ring)</div>
+                    <img src="../figures/html_sagnacspectra_RZ.png" alt="Sagnac Spectra Z"
+                         onerror="this.src='../figures/old/oops.png'">
+                    <div style="font-size:0.95em;color:#666;">Spectral snapshot for Z ring</div>
+                </div>
+                <div class="plot-card">
+                    <div class="plot-title">Sagnac Spectra (U Ring)</div>
+                    <img src="../figures/html_sagnacspectra_RU.png" alt="Sagnac Spectra U"
+                         onerror="this.src='../figures/old/oops.png'">
+                    <div style="font-size:0.95em;color:#666;">Spectral snapshot for U ring</div>
+                </div>
+                <div class="plot-card">
+                    <div class="plot-title">Sagnac Spectra (V Ring)</div>
+                    <img src="../figures/html_sagnacspectra_RV.png" alt="Sagnac Spectra V"
+                         onerror="this.src='../figures/old/oops.png'">
+                    <div style="font-size:0.95em;color:#666;">Spectral snapshot for V ring</div>
+                </div>
+                <div class="plot-card">
+                    <div class="plot-title">Sagnac Spectra (W Ring) (Currently unavailable, repeating V)</div>
+                    <img src="../figures/html_sagnacspectra_RV.png" alt="Sagnac Spectra W"
+                         onerror="this.src='../figures/old/oops.png'">
+                    <div style="font-size:0.95em;color:#666;">Spectral snapshot for W ring</div>
+                </div>
+                <div class="plot-card">
+                    <div class="plot-title">Drumplot (Helicorder)</div>
+                    <img src="../figures/html_oszi.png" alt="Drumplot Helicorder"
+                         onerror="this.src='../figures/old/oops.png'">
+                    <div style="font-size:0.95em;color:#666;">Latest drumplot (helicorder) overview</div>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="section-title">General Information</div>
+            <p>
+                This page provides a quick overview of the ROMY ring laser status. 
+            </p>
+        </div>
+    </main>
+</body>
+</html>

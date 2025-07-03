@@ -55,13 +55,13 @@ elif os.uname().nodename in ['lin-ffb-01', 'ambrym', 'hochfelln']:
 
 # ### Load Configuration
 
-# In[54]:
+# In[4]:
 
 
 config = {}
 
 # specify cameras (designed for 4 cameras)
-config['cameras'] = ['00', '03', '07']
+config['cameras'] = ['00', '03', '07', '05']
 
 # path to beam walk data
 config['path_to_data'] = archive_path+f"ids/"
@@ -104,7 +104,8 @@ config['time_interval'] = 14 # days
 
 # config['last_reset'] = UTCDateTime("2024-10-01 14:00")
 # config['last_reset'] = UTCDateTime("2024-10-09 13:00")
-config['last_reset'] = UTCDateTime("2025-04-14 15:00")
+# config['last_reset'] = UTCDateTime("2025-04-14 15:00")
+config['last_reset'] = UTCDateTime("2025-07-03 00:00")
 
 # define time interval
 config['tend'] = UTCDateTime().now()
@@ -190,7 +191,7 @@ def __convert_and_reduce(df0, conversion_factor):
     return df0
 
 
-# In[59]:
+# In[8]:
 
 
 def __filter(df0):
@@ -216,7 +217,7 @@ def __filter(df0):
 
 # ### Load MLTI
 
-# In[24]:
+# In[9]:
 
 
 mltiZ = __load_mlti(config['tbeg'], config['tend'], "Z", archive_path)
@@ -224,7 +225,7 @@ mltiZ = __load_mlti(config['tbeg'], config['tend'], "Z", archive_path)
 mltiZ_t1, mltiZ_t2 = __get_mlti_intervals(mltiZ.time_utc)
 
 
-# In[25]:
+# In[10]:
 
 
 mltiU = __load_mlti(config['tbeg'], config['tend'], "U", archive_path)
@@ -232,7 +233,7 @@ mltiU = __load_mlti(config['tbeg'], config['tend'], "U", archive_path)
 mltiU_t1, mltiU_t2 = __get_mlti_intervals(mltiU.time_utc)
 
 
-# In[26]:
+# In[11]:
 
 
 mltiV = __load_mlti(config['tbeg'], config['tend'], "V", archive_path)
@@ -242,7 +243,7 @@ mltiV_t1, mltiV_t2 = __get_mlti_intervals(mltiV.time_utc)
 
 # ### Load Beam Walk Data
 
-# In[27]:
+# In[12]:
 
 
 ids = {}
@@ -251,7 +252,7 @@ for _cam in config['cameras']:
     try:
         ids[_cam] = __load_beam_wander_data(config['tbeg'].date,
                                             config['tend'].date,
-                                            config['path_to_data']+f"data{_cam}/",
+                                            config['path_to_data'],
                                             _cam
                                            )
     except Exception as e:
@@ -260,7 +261,7 @@ for _cam in config['cameras']:
 
 # ### Processing
 
-# In[63]:
+# In[13]:
 
 
 for _cam in config['cameras']:
@@ -281,7 +282,7 @@ for _cam in config['cameras']:
 
 # ### Load LXX Log
 
-# In[29]:
+# In[13]:
 
 
 # load maintenance log
@@ -293,7 +294,7 @@ lxx_t1, lxx_t2 = __get_lxx_intervals(lxx.datetime)
 
 # ### Plotting
 
-# In[85]:
+# In[16]:
 
 
 def __makeplot():
@@ -454,11 +455,12 @@ def __makeplot():
         ax.get_xaxis().set_visible(False)
         ax.get_yaxis().set_visible(False)
 
+    ax0.set_title(f"Beam Walk Monitor (last reset: {config['last_reset'].date} {str(config['last_reset'].time)[:10]} UTC)", pad=1)
     # plt.show();
     return fig
 
 
-# In[ ]:
+# In[17]:
 
 
 fig = __makeplot();

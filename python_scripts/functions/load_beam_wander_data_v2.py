@@ -12,8 +12,8 @@ def __load_beam_wander_data(tbeg, tend, path_to_data, cam, verbose=False):
     df = DataFrame()
     for dat in date_range(t1, t2, inclusive="left"):
 
-#        file = f"data{cam}/{str(dat)[:10].replace('-','')}.pkl"
-        file = f"{str(dat)[:10].replace('-','')}.pkl"
+        file = f"data{cam}/{str(dat)[:10].replace('-','')}.pkl"
+#        file = f"{str(dat)[:10].replace('-','')}.pkl"
         try:
             if verbose:
                 print("loading:", path_to_data+file)

@@ -47,9 +47,6 @@ elif os.uname().nodename in ['lin-ffb-01', 'ambrym', 'hochfelln']:
 # In[36]:
 
 
-sys.argv
-
-
 # In[37]:
 
 
@@ -69,13 +66,13 @@ config['path_to_data'] = data_path+"romy_events/data/"
 config['path_to_sds'] = archive_path+"temp_archive/"
 
 # time range for loading data
-if len(sys.argv) > 2:
+if len(sys.argv) >= 2:
     config['tbeg'] = obs.UTCDateTime(sys.argv[1])
     config['tend'] = obs.UTCDateTime(sys.argv[1]) + 86400
 else:
     config['tbeg'] = obs.UTCDateTime("2025-05-28 00:00")
     config['tend'] = obs.UTCDateTime("2025-05-28 01:00")
-
+print(config['tbeg'], config['tend'])
 # frequency band for filtering
 config['fmin'] = 0.1 # Hz
 config['fmax'] = 0.5 # Hz

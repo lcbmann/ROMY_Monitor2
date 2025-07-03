@@ -528,6 +528,11 @@ fig = plot_waveforms(stt, fmin=config['fmin'], fmax=config['fmax'])
 
 fig.savefig(f"{config['path_to_figs']}html_romy_baro.png")
 
+try:
+    fig.savefig(f"/freenas-ffb-01/baro_monitor_plots/{config['t1']}.png")
+except Exception as e:
+    print(e)
+    pass
 
 # In[ ]:
 

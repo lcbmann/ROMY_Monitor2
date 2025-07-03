@@ -8,7 +8,7 @@
 # In[1]:
 
 
-import os
+import os, sys 
 import obspy as obs
 import matplotlib.pyplot as plt
 import numpy as np
@@ -81,14 +81,20 @@ config['path_to_sds'] = archive_path+"temp_archive/"
 # config['t2'] = obs.UTCDateTime("2024-03-04 07:00")
 # config['toffset'] = 3*3600
 
-config['t1'] = obs.UTCDateTime("2024-04-23 02:00")
-config['t2'] = obs.UTCDateTime("2024-04-23 05:00")
-config['toffset'] = 3*3600
+config['t1'] = obs.UTCDateTime(sys.argv[1])
+config['t2'] = config['t1'] + 1*3600
+config['toffset'] = 1.5*3600
+
+print(config['t1'], config['t2'])
+
+#config['t1'] = obs.UTCDateTime("2024-04-23 02:00")
+#config['t2'] = obs.UTCDateTime("2024-04-23 05:00")
+#config['toffset'] = 3*3600
 
 # quasi live mode
-config['toffset'] = 3*3600
-config['t2'] = obs.UTCDateTime.now() - 86400
-config['t1'] = config['t2'] - config['toffset']
+#config['toffset'] = 3*3600
+#config['t2'] = obs.UTCDateTime.now() - 86400
+#config['t1'] = config['t2'] - config['toffset']
 
 # data
 config['tbeg'] = config['t1'] - config['toffset']

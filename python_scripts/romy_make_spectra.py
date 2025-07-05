@@ -149,23 +149,39 @@ def main():
         print(f"✖ No usable data found for {RUN_DATE}")
         return
 
-    # ---------- pickle ----------------------------------------------------
-    pkl_name = PKL_DIR / f"R{RING}_{RUN_DATE.replace('-','')}_spectra.pkl"
-    DataFrame({"frequencies":[full_freq], "psds":[np.array(psds)]}).to_pickle(pkl_name)
-    print("✔ saved pickle  →", pkl_name)
+        # ---------- pickle ----------------------------------------------------
+    try:
+        pkl_name = PKL_DIR / f"R{RING}_{RUN_DATE.replace('-','')}_spectra.pkl"
+        pkl_name.parent.mkdir(parents=True, exist_ok=True)
+        DataFrame({"frequencies":[full_freq],
+                   "psds":[np.array(psds)]}).to_pickle(pkl_name)
+        print("✔ saved pickle  →", pkl_name)
+    except PermissionError:
+        # fall back to a local folder inside the repo
+        local_dir = (REPO_ROOT / "local_output" / RUN_DATE[:4] / f"R{RING}")
+        local_dir.mkdir(parents=True, exist_ok=True)
+        pkl_name = local_dir / f"R{RING}_{RUN_DATE.replace('-','')}_spectra.pkl"
+        DataFrame({"frequencies":[full_freq],
+                   "psds":[np.array(psds)]}).to_pickle(pkl_name)
+        print("✔ saved pickle  →", pkl_name, "(fallback)")
 
-    # ---------- figure ----------------------------------------------------
+
+        # ---------- figure ----------------------------------------------------
     mask     = (full_freq >= EXPECTED_F-CFG["band"]) & (full_freq <= EXPECTED_F+CFG["band"])
     fig_freq = full_freq[mask]
     fig_psds = np.array(psds)[:, mask]
 
     fig = make_figure(fig_freq, fig_psds, rots)
-    png_name = FIG_DIR / f"html_sagnacspectra_R{RING}.png"
-    fig.savefig(png_name, dpi=150, bbox_inches="tight")
+    try:
+        png_name = FIG_DIR / f"html_sagnacspectra_R{RING}.png"
+        fig.savefig(png_name, dpi=150, bbox_inches="tight")
+        print("✔ saved figure →", png_name)
+    except PermissionError:
+        png_name = (REPO_ROOT / "local_output" /
+                    f"html_sagnacspectra_R{RING}.png")
+        fig.savefig(png_name, dpi=150, bbox_inches="tight")
+        print("✔ saved figure →", png_name, "(fallback)")
     plt.close(fig)
-    print("✔ saved figure →", png_name)
-
-    gc.collect()
 
 # ─────────── entry point ─────────────────────────────────────────────────
 if __name__ == "__main__":

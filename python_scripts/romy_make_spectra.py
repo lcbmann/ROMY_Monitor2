@@ -106,14 +106,18 @@ def make_figure(freq, psds, rot_traces):
 
     # mini-helicorder
     t = np.linspace(0, 60, len(rot_traces[0]))
-    for i, tr in enumerate(rot_traces[::-1]):          # oldest top
-        norm = np.nanmax(np.abs(tr)) or 1
-        ax[1].plot(t, 0.8*tr/norm + i, color=colours[i], lw=.5)
-    ax[1].set(ylim=(-1,24),
-              yticks=np.arange(0,24,3),
-              yticklabels=[f"{h:02d}:00" for h in range(23,-1,-3)],
+    for i, tr in enumerate(rot_traces[::-1]):      # oldest on top
+        t_vec = np.linspace(0, 60, len(tr))        # NEW – individual time axis
+        norm  = np.nanmax(np.abs(tr)) or 1.0
+        ax[1].plot(t_vec, 0.8 * tr / norm + i,
+                   color=colours[i], lw=.5)
+
+    ax[1].set(ylim=(-1, 24),
+              yticks=np.arange(0, 24, 3),
+              yticklabels=[f"{h:02d}:00" for h in range(23, -1, -3)],
               xlabel="Time (min)",
               title="Helicorder (norm.)")
+
     ax[1].grid(ls=":")
     fig.tight_layout()
     return fig

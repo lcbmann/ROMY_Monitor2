@@ -1,0 +1,53 @@
+# Dependencies and libraries
+node_modules/
+bower_components/
+vendor/
+lib/
+libs/
+external/
+
+# Build outputs
+dist/
+build/
+*.min.js
+*.min.css
+
+# Python virtual environments and cache
+venv/
+.venv/
+env/
+.env/
+ENV/
+.ENV/
+env.bak/
+venv.bak/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+*.egg-info/
+
+# Scientific computing cache
+.ipynb_checkpoints/
+.spyderproject
+.spyproject
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Logs and temp files
+*.log
+tmp/
+temp/

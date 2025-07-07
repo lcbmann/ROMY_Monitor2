@@ -1,0 +1,49 @@
+/* ─── palette & reset ─────────────────────────────── */
+:root{
+    --bg:#f4f6fa;--fg:#222;--brand:#2d3e50;
+    --card:#f9fafb;--shadow:0 2px 8px rgba(0,0,0,.07);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,Segoe UI,Arial,sans-serif;
+     background:var(--bg);color:var(--fg)}
+
+/* header */
+header{background:var(--brand);color:#fff;text-align:center;
+        padding:1.6rem 1rem}
+header h1{font-size:1.8rem;margin-bottom:.3rem}
+.subtitle{opacity:.85;font-size:.95rem}
+
+/* nav */
+nav{background:#fff;border-bottom:1px solid #e0e0e0;padding:1rem 2rem;
+    display:flex;gap:1.4rem;flex-wrap:wrap}
+nav summary,nav a{color:var(--brand);font-weight:600;cursor:pointer;text-decoration:none}
+nav summary::-webkit-details-marker{display:none}
+nav details[open] summary{text-decoration:underline}
+nav details[open] a{display:block;padding:.2rem 0 .2rem .7rem}
+
+/* main container */
+main{max-width:1100px;margin:2rem auto;background:#fff;border-radius:8px;
+     padding:2rem;box-shadow:var(--shadow)}
+h2{font-size:1.25rem;margin-bottom:1rem;color:var(--brand)}
+section:not(:last-child){margin-bottom:2.4rem}
+
+/* plot cards */
+.plots{display:flex;flex-wrap:wrap;gap:2rem}
+.card{background:var(--card);border-radius:6px;padding:1rem;text-align:center;
+      flex:1 1 340px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.card img{max-width:100%;border-radius:4px;margin-top:.6rem;cursor:pointer;
+          transition:transform .2s}
+figcaption{font-weight:600;color:#3a4a5d}
+
+/* lightbox overlay */
+#overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;
+         align-items:center;justify-content:center;opacity:0;visibility:hidden;
+         transition:opacity .25s ease}
+#overlay img{max-width:90vw;max-height:90vh;border-radius:6px;
+             box-shadow:0 4px 12px rgba(0,0,0,.4);transform:scale(.8);
+             transition:transform .25s ease}
+#overlay.show{opacity:1;visibility:visible}
+#overlay.show img{transform:scale(1)}
+
+/* mobile */
+@media(max-width:800px){.plots{flex-direction:column}}

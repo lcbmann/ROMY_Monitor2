@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ROMY Ring‑Laser Monitor - Backscatter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <section class="hero is-primary is-small hero-banner">
+    <div class="hero-body">
+      <div class="container has-text-centered">
+        <h1 class="title is-1 has-text-white">
+          ROMY Ring‑Laser Monitor
+        </h1>
+        <p class="subtitle is-4 has-text-white">Backscatter</p>
+      </div>
+    </div>
+  </section>
+
+  <nav class="navbar is-light" role="navigation">
+    <div class="container">
+      <div class="navbar-menu is-active">
+        <div class="navbar-start">
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link">Main</a>
+            <div class="navbar-dropdown">
+              <a class="navbar-item" href="index.html">
+                <i class="fas fa-home mr-2"></i>Overview
+              </a>
+            </div>
+          </div>
+
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link">
+              <i class="fas fa-laser-pointer mr-2"></i>Laser Data
+            </a>
+            <div class="navbar-dropdown">
+              <a class="navbar-item" href="sagnac-spectra.html">
+                <i class="fas fa-wave-square mr-2"></i>Sagnac Spectra
+              </a>
+              <a class="navbar-item" href="beam-wander.html">
+                <i class="fas fa-video mr-2"></i>Beam Wander
+              </a>
+              <a class="navbar-item" href="beat-drift.html">
+                <i class="fas fa-heartbeat mr-2"></i>Beat Drift
+              </a>
+              <a class="navbar-item disabled">
+                <i class="fas fa-scan mr-2"></i>Scanner
+              </a>
+              <a class="navbar-item" href="backscatter.html">
+                <i class="fas fa-arrows-alt mr-2"></i>Backscatter
+              </a>
+            </div>
+          </div>
+
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link">
+              <i class="fas fa-thermometer-half mr-2"></i>Environment
+            </a>
+            <div class="navbar-dropdown">
+              <a class="navbar-item" href="environmental.html">
+                <i class="fas fa-temperature-high mr-2"></i>Environmental
+              </a>
+              <a class="navbar-item disabled">
+                <i class="fas fa-tint mr-2"></i>Humidity
+              </a>
+              <a class="navbar-item disabled">
+                <i class="fas fa-water mr-2"></i>Water Level
+              </a>
+              <a class="navbar-item" href="barometric.html">
+                <i class="fas fa-gauge mr-2"></i>Barometric
+              </a>
+            </div>
+          </div>
+
+          <a class="navbar-item" href="helicorder.html">
+            <i class="fas fa-chart-line mr-2"></i>Helicorder
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="title is-3 has-text-primary">
+        <i class="fas fa-arrows-alt mr-2"></i>Backscatter Analysis
+      </h2>
+      <div class="columns">
+        <div class="column is-12">
+          <div class="card">
+            <div class="card-header">
+              <p class="card-header-title">
+                <i class="fas fa-wave-square mr-2"></i>Backscatter Measurements
+              </p>
+            </div>
+            <div class="card-content">
+              <figure class="image">
+                <img class="lb" data-src="../../figures/html_backscatter.png"
+                     alt="Backscatter"
+                     onerror="this.src='../../figures/old/oops.png'">
+              </figure>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────── cache‑buster (unchanged) ───────── -->
+  <script>
+    (function refresh() {
+      const ts = Date.now();
+      document.querySelectorAll('img[data-src]')
+        .forEach(img => img.src = img.dataset.src + '?v=' + ts);
+      setTimeout(refresh, 60000);
+    })();
+  </script>
+
+  <!-- ───────── minimal lightbox ───────── -->
+  <script>
+    (() => {
+      const overlay = document.createElement('div');
+      overlay.id = 'overlay';
+      overlay.innerHTML = '<img>';
+      document.body.appendChild(overlay);
+      const big = overlay.querySelector('img');
+
+      document.addEventListener('click', e => {
+        if (!e.target.classList.contains('lb')) return;
+        big.src = e.target.src;
+        overlay.classList.add('show');
+      });
+
+      overlay.addEventListener('click', () => overlay.classList.remove('show'));
+      document.addEventListener('keyup', e => {
+        if (e.key === 'Escape') overlay.classList.remove('show');
+      });
+    })();
+  </script>
+</body>
+</html>

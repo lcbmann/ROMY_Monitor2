@@ -9,6 +9,9 @@ year=$(date -d -1days +%Y)
 # copy Z spectra
 cp /freenas-ffb-01/romy_plots/${year}/BJZ/spectra/BW_ROMY_10_BJZ_${date}.png ${target}BW_ROMY_10_BJZ.png
 
+# copy maintenance plot
+cp /freenas-ffb-01/romy_plots/${year}/logs/${year}_LX_maintenance_overview.png ${target}html_maintenance.png
+
 # copy UVW spectra
 for r in U V W; do
     cp /freenas-ffb-01/romy_plots/${year}/BJ${r}/spectra/BW_ROMY__BJ${r}_${date}.png ${target}BW_ROMY__BJ${r}.png

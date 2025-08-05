@@ -1,0 +1,44 @@
+# Test configuration for Andreas's spectra script
+tbeg: "2025-08-04 00:00:00"  # Start time - yesterday
+tend: "2025-08-04 23:59:59"  # End time - same day
+
+# SEED identifiers - try RV ring which had data
+seeds: ["BW.ROMY..BJV"]  # V ring rotation data
+
+# Path to SDS for rotation data - use the actual archive path
+path_to_sds: "/import/freenas-ffb-01-data/romy_archive/"  # SDS path for rotation data
+
+# Path configurations - use local output for testing
+path_to_data_out: "/home/cbuergmann/romy_dev/ROMY_Monitor2/local_output/spectra_data/"
+path_to_figures_out: "/home/cbuergmann/romy_dev/ROMY_Monitor2/local_output/spectra_plots/"
+
+# Time interval parameters for spectra
+tinterval: 3600  # time interval in seconds (1 hour)
+toverlap: 0  # time overlap in seconds
+method: "welch"  # welch | multitaper | fft
+
+# plot limits for frequency range
+fmin: 0.001
+fmax: 5.0
+
+# Average in octave frequency bands
+apply_average: True
+fraction_of_octave: 12
+averaging: 'median'
+
+# Set data unit for spectra
+data_unit: 'rad/s'
+
+# Remove response
+remove_response: False
+inventory_file: ''
+
+# Quality filter parameters
+quality_filter: 'good' # Filter out bad spectra
+threshold: 1e-15 # Threshold for high value detection (all above then considered bad)
+zero_seq_limit: 20 # Maximum allowed length of zero sequences
+high_seq_limit: 20 # Maximum allowed length of high value sequences
+flat_seq_limit: 20 # Maximum allowed length of flat-line segments
+
+# Optional parameters
+verbose: true  # Print detailed information

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>ROMY Ring‑Laser Monitor - Helicorder</title>
+  <title>ROMY Ring‑Laser Monitor - Seismic Noise</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -15,7 +15,7 @@
         <h1 class="title is-1 has-text-white">
           ROMY Ring‑Laser Monitor
         </h1>
-        <p class="subtitle is-4 has-text-white">Helicorder</p>
+        <p class="subtitle is-4 has-text-white">Seismic Noise</p>
       </div>
     </div>
   </section>
@@ -35,11 +35,11 @@
 
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link">
-              <i class="fas fa-laser-pointer mr-2"></i>Laser Data
+              <i class="fas fa-wave-square mr-2"></i>Sagnac Analysis
             </a>
             <div class="navbar-dropdown">
               <a class="navbar-item" href="sagnac-spectra.html">
-                <i class="fas fa-wave-square mr-2"></i>Sagnac Spectra
+                <i class="fas fa-chart-line mr-2"></i>Sagnac Spectra
               </a>
               <a class="navbar-item" href="beam-wander.html">
                 <i class="fas fa-video mr-2"></i>Beam Wander
@@ -77,7 +77,7 @@
           </div>
 
           <a class="navbar-item" href="helicorder.html">
-            <i class="fas fa-chart-line mr-2"></i>Helicorder
+            <i class="fas fa-chart-area mr-2"></i>Seismic Noise
           </a>
         </div>
       </div>
@@ -86,23 +86,259 @@
 
   <section class="section">
     <div class="container">
+      <!-- Sagnac Spectra Section -->
       <h2 class="title is-3 has-text-primary">
-        <i class="fas fa-chart-line mr-2"></i>Helicorder Drumplot
+        <i class="fas fa-chart-line mr-2"></i>Sagnac Spectra
       </h2>
-      <div class="columns">
-        <div class="column is-12">
+      <div class="columns is-multiline">
+        <div class="column is-6">
           <div class="card">
             <div class="card-header">
-              <p class="card-header-title">
-                <i class="fas fa-clock mr-2"></i>24-Hour Helicorder (Drumplot)
-              </p>
+              <p class="card-header-title">Ring U - Sagnac Spectrum</p>
             </div>
             <div class="card-content">
               <figure class="image">
-                <img class="lb" data-src="../../figures/html_oszi.png"
-                     alt="Helicorder"
+                <img class="lb" data-src="../../figures/sagnac_spectrum_RU.png"
+                     alt="Sagnac Spectrum Ring U"
                      onerror="this.src='../../figures/old/oops.png'">
               </figure>
+              <div class="content mt-3">
+                <p class="is-size-7 has-text-grey">
+                  <strong>Sagnac Spectrum:</strong> Power spectral density of the beat-note signal (FJ channel) showing the laser frequency stability around the expected Sagnac frequency. The median (black line) represents typical noise levels over 24 hours.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="column is-6">
+          <div class="card">
+            <div class="card-header">
+              <p class="card-header-title">Ring V - Sagnac Spectrum</p>
+            </div>
+            <div class="card-content">
+              <figure class="image">
+                <img class="lb" data-src="../../figures/sagnac_spectrum_RV.png"
+                     alt="Sagnac Spectrum Ring V"
+                     onerror="this.src='../../figures/old/oops.png'">
+              </figure>
+              <div class="content mt-3">
+                <p class="is-size-7 has-text-grey">
+                  <strong>Sagnac Spectrum:</strong> Power spectral density of the beat-note signal (FJ channel) showing the laser frequency stability around the expected Sagnac frequency. The median (black line) represents typical noise levels over 24 hours.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="column is-6">
+          <div class="card">
+            <div class="card-header">
+              <p class="card-header-title">Ring W - Sagnac Spectrum</p>
+            </div>
+            <div class="card-content">
+              <figure class="image">
+                <img class="lb" data-src="../../figures/sagnac_spectrum_RW.png"
+                     alt="Sagnac Spectrum Ring W"
+                     onerror="this.src='../../figures/old/oops.png'">
+              </figure>
+              <div class="content mt-3">
+                <p class="is-size-7 has-text-grey">
+                  <strong>Sagnac Spectrum:</strong> Power spectral density of the beat-note signal (FJ channel) showing the laser frequency stability around the expected Sagnac frequency. The median (black line) represents typical noise levels over 24 hours.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="column is-6">
+          <div class="card">
+            <div class="card-header">
+              <p class="card-header-title">Ring Z - Sagnac Spectrum</p>
+            </div>
+            <div class="card-content">
+              <figure class="image">
+                <img class="lb" data-src="../../figures/sagnac_spectrum_RZ.png"
+                     alt="Sagnac Spectrum Ring Z"
+                     onerror="this.src='../../figures/old/oops.png'">
+              </figure>
+              <div class="content mt-3">
+                <p class="is-size-7 has-text-grey">
+                  <strong>Sagnac Spectrum:</strong> Power spectral density of the beat-note signal (FJ channel) showing the laser frequency stability around the expected Sagnac frequency. The median (black line) represents typical noise levels over 24 hours.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rotation PSD Section -->
+      <h2 class="title is-3 has-text-primary mt-6">
+        <i class="fas fa-rotate mr-2"></i>Rotation Power Spectral Density
+      </h2>
+      <div class="columns is-multiline">
+        <div class="column is-6">
+          <div class="card">
+            <div class="card-header">
+              <p class="card-header-title">Ring U - Rotation PSD</p>
+            </div>
+            <div class="card-content">
+              <figure class="image">
+                <img class="lb" data-src="../../figures/rotation_psd_RU.png"
+                     alt="Rotation PSD Ring U"
+                     onerror="this.src='../../figures/old/oops.png'">
+              </figure>
+              <div class="content mt-3">
+                <p class="is-size-7 has-text-grey">
+                  <strong>Rotation PSD:</strong> Power spectral density of the rotation signal (BJ channel) showing seismic noise and rotation sensitivity across frequencies. Lower frequencies show Earth's rotation and seismic signals, while higher frequencies indicate instrumental noise.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="column is-6">
+          <div class="card">
+            <div class="card-header">
+              <p class="card-header-title">Ring V - Rotation PSD</p>
+            </div>
+            <div class="card-content">
+              <figure class="image">
+                <img class="lb" data-src="../../figures/rotation_psd_RV.png"
+                     alt="Rotation PSD Ring V"
+                     onerror="this.src='../../figures/old/oops.png'">
+              </figure>
+              <div class="content mt-3">
+                <p class="is-size-7 has-text-grey">
+                  <strong>Rotation PSD:</strong> Power spectral density of the rotation signal (BJ channel) showing seismic noise and rotation sensitivity across frequencies. Lower frequencies show Earth's rotation and seismic signals, while higher frequencies indicate instrumental noise.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="column is-6">
+          <div class="card">
+            <div class="card-header">
+              <p class="card-header-title">Ring W - Rotation PSD</p>
+            </div>
+            <div class="card-content">
+              <figure class="image">
+                <img class="lb" data-src="../../figures/rotation_psd_RW.png"
+                     alt="Rotation PSD Ring W"
+                     onerror="this.src='../../figures/old/oops.png'">
+              </figure>
+              <div class="content mt-3">
+                <p class="is-size-7 has-text-grey">
+                  <strong>Rotation PSD:</strong> Power spectral density of the rotation signal (BJ channel) showing seismic noise and rotation sensitivity across frequencies. Lower frequencies show Earth's rotation and seismic signals, while higher frequencies indicate instrumental noise.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="column is-6">
+          <div class="card">
+            <div class="card-header">
+              <p class="card-header-title">Ring Z - Rotation PSD</p>
+            </div>
+            <div class="card-content">
+              <figure class="image">
+                <img class="lb" data-src="../../figures/rotation_psd_RZ.png"
+                     alt="Rotation PSD Ring Z"
+                     onerror="this.src='../../figures/old/oops.png'">
+              </figure>
+              <div class="content mt-3">
+                <p class="is-size-7 has-text-grey">
+                  <strong>Rotation PSD:</strong> Power spectral density of the rotation signal (BJ channel) showing seismic noise and rotation sensitivity across frequencies. Lower frequencies show Earth's rotation and seismic signals, while higher frequencies indicate instrumental noise.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Helicorder Section -->
+      <h2 class="title is-3 has-text-primary mt-6">
+        <i class="fas fa-chart-bar mr-2"></i>Helicorder (24-Hour Drumplot)
+      </h2>
+      <div class="columns is-multiline">
+        <div class="column is-6">
+          <div class="card">
+            <div class="card-header">
+              <p class="card-header-title">Ring U - Helicorder</p>
+            </div>
+            <div class="card-content">
+              <figure class="image">
+                <img class="lb" data-src="../../figures/helicorder_RU.png"
+                     alt="Helicorder Ring U"
+                     onerror="this.src='../../figures/old/oops.png'">
+              </figure>
+              <div class="content mt-3">
+                <p class="is-size-7 has-text-grey">
+                  <strong>Helicorder:</strong> 24-hour drumplot showing rotation signals (BJ channel) stacked by hour. Each horizontal line represents one hour of data, with the newest data at the bottom. Seismic events and daily variations are visible as amplitude changes.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="column is-6">
+          <div class="card">
+            <div class="card-header">
+              <p class="card-header-title">Ring V - Helicorder</p>
+            </div>
+            <div class="card-content">
+              <figure class="image">
+                <img class="lb" data-src="../../figures/helicorder_RV.png"
+                     alt="Helicorder Ring V"
+                     onerror="this.src='../../figures/old/oops.png'">
+              </figure>
+              <div class="content mt-3">
+                <p class="is-size-7 has-text-grey">
+                  <strong>Helicorder:</strong> 24-hour drumplot showing rotation signals (BJ channel) stacked by hour. Each horizontal line represents one hour of data, with the newest data at the bottom. Seismic events and daily variations are visible as amplitude changes.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="column is-6">
+          <div class="card">
+            <div class="card-header">
+              <p class="card-header-title">Ring W - Helicorder</p>
+            </div>
+            <div class="card-content">
+              <figure class="image">
+                <img class="lb" data-src="../../figures/helicorder_RW.png"
+                     alt="Helicorder Ring W"
+                     onerror="this.src='../../figures/old/oops.png'">
+              </figure>
+              <div class="content mt-3">
+                <p class="is-size-7 has-text-grey">
+                  <strong>Helicorder:</strong> 24-hour drumplot showing rotation signals (BJ channel) stacked by hour. Each horizontal line represents one hour of data, with the newest data at the bottom. Seismic events and daily variations are visible as amplitude changes.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="column is-6">
+          <div class="card">
+            <div class="card-header">
+              <p class="card-header-title">Ring Z - Helicorder</p>
+            </div>
+            <div class="card-content">
+              <figure class="image">
+                <img class="lb" data-src="../../figures/helicorder_RZ.png"
+                     alt="Helicorder Ring Z"
+                     onerror="this.src='../../figures/old/oops.png'">
+              </figure>
+              <div class="content mt-3">
+                <p class="is-size-7 has-text-grey">
+                  <strong>Helicorder:</strong> 24-hour drumplot showing rotation signals (BJ channel) stacked by hour. Each horizontal line represents one hour of data, with the newest data at the bottom. Seismic events and daily variations are visible as amplitude changes.
+                </p>
+              </div>
             </div>
           </div>
         </div>

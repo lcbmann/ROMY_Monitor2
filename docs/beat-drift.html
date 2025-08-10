@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ROMY Ring‑Laser Monitor - Beat Drift</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css" />
+  <script src="js/navigation.js"></script>
+</head>
+<body>
+  <section class="hero is-primary is-small hero-banner">
+    <div class="hero-body">
+      <div class="container has-text-centered">
+        <h1 class="title is-1 has-text-white">
+          ROMY Ring‑Laser Monitor
+        </h1>
+        <p class="subtitle is-4 has-text-white">Beat Drift</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Navigation placeholder -->
+  <div id="navigation-placeholder"></div>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="title is-3 has-text-primary">
+        <i class="fas fa-heartbeat mr-2"></i>Beat Frequency Drift Analysis
+      </h2>
+      <div class="columns">
+        <div class="column is-12">
+          <div class="card">
+            <div class="card-header">
+              <p class="card-header-title">
+                <i class="fas fa-signal mr-2"></i>Beat Frequency Stability
+              </p>
+            </div>
+            <div class="card-content">
+              <figure class="image">
+                <img class="lb" data-src="../../figures/html_beatdrift.png"
+                     alt="Beat Drift Analysis"
+                     title="Click to view full size" />
+              </figure>
+              <div class="content mt-3">
+                <p class="is-size-7 has-text-grey">
+                  <strong>Beat Frequency Drift:</strong> Analysis of the stability of the beat frequency between counter-propagating laser beams. Drift in the beat frequency can indicate thermal effects, mechanical vibrations, or other instabilities affecting the laser cavity.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lightbox overlay -->
+  <div id="overlay">
+    <img id="overlayImg" alt="" />
+  </div>
+
+  <script>
+    // Cache buster for images
+    function addCacheBuster() {
+      const images = document.querySelectorAll('img[data-src]');
+      const timestamp = new Date().getTime();
+      images.forEach(img => {
+        const originalSrc = img.getAttribute('data-src');
+        img.src = originalSrc + '?t=' + timestamp;
+      });
+    }
+
+    // Lightbox functionality
+    function setupLightbox() {
+      const overlay = document.getElementById('overlay');
+      const overlayImg = document.getElementById('overlayImg');
+      
+      document.querySelectorAll('.lb').forEach(img => {
+        img.addEventListener('click', () => {
+          overlayImg.src = img.src;
+          overlay.classList.add('show');
+        });
+      });
+      
+      overlay.addEventListener('click', () => {
+        overlay.classList.remove('show');
+      });
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      addCacheBuster();
+      setupLightbox();
+      
+      // Auto-refresh every 5 minutes
+      setInterval(addCacheBuster, 300000);
+    });
+  </script>
+</body>
+</html>

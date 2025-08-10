@@ -2,7 +2,7 @@
 
 /* Hero banner background */
 .hero-banner {
-  background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('../images/banner.png') center center/auto 40%;
+  background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('./images/banner.png') center center/auto 40%;
   background-attachment: fixed;
   background-color: #1a1a1a;
 }

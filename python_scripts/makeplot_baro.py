@@ -24,7 +24,13 @@ from functions.trim_stream import trim_stream
 from functions.read_sds import __read_sds
 from functions.get_mean_promy_pressure import __get_mean_promy_pressure
 from functions.get_mean_rmy_pressure import __get_mean_rmy_pressure
-from functions.regressions import regressions
+try:
+    import sklearn  # noqa: F401
+    from functions.regressions import regressions
+    _HAVE_SKLEARN = True
+except Exception as _e:
+    print(f"[barometric] sklearn unavailable or regressions import failed: {_e}. Proceeding without regression models.")
+    _HAVE_SKLEARN = False
 
 
 # In[4]:
@@ -201,15 +207,18 @@ stt += rot1.copy()
 stt += ffbi0.copy()
 stt += bdh.copy()
 
-try:
-    stt += promy.copy()
-except Exception as e:
-    print(e)
-
-try:
-    stt += rmy.copy()
-except Exception as e:
-    print(e)
+_promy_obj = globals().get('promy', None)
+if _promy_obj is not None:
+    try:
+        stt += _promy_obj.copy()
+    except Exception as e:
+        print(e)
+_rmy_obj = globals().get('rmy', None)
+if _rmy_obj is not None:
+    try:
+        stt += _rmy_obj.copy()
+    except Exception as e:
+        print(e)
 
 
 # In[96]:
@@ -293,38 +302,41 @@ def compute_regression_models_with_regressions(st, pressure_ch="BDO", hilbert_ch
     # Create time array
     time = st.select(channel=pressure_ch)[0].times()
     
-    # Process all channels
+    # Process channels; degrade gracefully if sklearn missing
     for channel in j_channels + t_channels:
-        # Get channel data
         data = st.select(channel=channel)[0].data
-        
-        # Create DataFrame for regression
-        df = pd.DataFrame({
-            'time': time,
-            'pressure': pressure,
-            'hilbert': hilbert_pressure,
-            'channel_data': data
-        })
-        
-        # Perform regression
-        reg_result = regressions(
-            df, 
-            features=['pressure', 'hilbert'], 
-            target='channel_data',
-            reg=reg_method,
-            verbose=False
-        )
-        
-        # Calculate model and residual
-        model = np.array(reg_result['dp'])
-        residual = data - model
-        
-        # Calculate variance reduction
-        var_orig = np.var(data)
-        var_resid = np.var(residual)
-        var_reduction = (var_orig - var_resid) / var_orig * 100
-        
-        # Store results
+        if not _HAVE_SKLEARN:
+            # No regression: residual = original signal, zero variance reduction
+            model = np.zeros_like(data)
+            residual = data
+            var_reduction = 0.0
+            reg_result = {'dp': model, 'r2': np.nan}
+        else:
+            try:
+                df = pd.DataFrame({
+                    'time': time,
+                    'pressure': pressure,
+                    'hilbert': hilbert_pressure,
+                    'channel_data': data
+                })
+                reg_result = regressions(
+                    df,
+                    features=['pressure', 'hilbert'],
+                    target='channel_data',
+                    reg=reg_method,
+                    verbose=False
+                )
+                model = np.array(reg_result['dp'])
+                residual = data - model
+                var_orig = np.var(data)
+                var_resid = np.var(residual)
+                var_reduction = (var_orig - var_resid) / var_orig * 100 if var_orig else 0.0
+            except ModuleNotFoundError as _e2:
+                print(f"[barometric] Regression skipped (sklearn missing at call time): {_e2}")
+                model = np.zeros_like(data)
+                residual = data
+                var_reduction = 0.0
+                reg_result = {'dp': model, 'r2': np.nan}
         results[channel] = {
             'model': model,
             'residual': residual,
@@ -368,13 +380,19 @@ def plot_waveforms(stt, fmin=None, fmax=None):
         st = st.filter("bandpass", freqmin=fmin, freqmax=fmax, corners=4, zerophase=True)
 
     # Compute regression models
-    print(f"Computing regression models for {len(st.select(channel='*J*'))+len(st.select(channel='*T*'))} traces")
-    regression_results = compute_regression_models_with_regressions(
-        st, 
-        pressure_ch="BDO", 
-        hilbert_ch="BDH", 
-        reg_method="ransac"
-    )
+    n_traces = len(st.select(channel='*J*'))+len(st.select(channel='*T*'))
+    if _HAVE_SKLEARN:
+        print(f"Computing regression models for {n_traces} traces")
+        regression_results = compute_regression_models_with_regressions(
+            st,
+            pressure_ch="BDO",
+            hilbert_ch="BDH",
+            reg_method="ransac"
+        )
+    else:
+        print(f"sklearn missing – skipping regression for {n_traces} traces")
+        regression_results = {tr.stats.channel: {'residual': np.zeros_like(tr.data), 'var_reduction': 0.0}
+                              for tr in st.select(channel='*J*')+st.select(channel='*T*')}
 
     # scaling factor for ROMY components
     j_scale = 1e9
@@ -454,11 +472,14 @@ def plot_waveforms(stt, fmin=None, fmax=None):
                            label=f'{tr.stats.station}.{tr.stats.channel}',
                            color='k'
                            )
-            axes[i+3].plot(tr.times()*tscale,
-                           regression_results[tr.stats.channel]['residual'] * j_scale,
-                           color='red',
-                           ls='--',
-                           label=f'Residual (VR={round(regression_results[tr.stats.channel]["var_reduction"], 1)}%')
+            if tr.stats.channel in regression_results:
+                axes[i+3].plot(
+                    tr.times()*tscale,
+                    regression_results[tr.stats.channel]['residual'] * j_scale,
+                    color='red',
+                    ls='--',
+                    label=f"Residual (VR={round(regression_results[tr.stats.channel].get('var_reduction', 0.0), 1)}%)"
+                )
             ymax = np.max(np.abs(data))
             axes[i+3].set_ylim(-ymax, ymax)
             axes[i+3].set_ylabel('$\dot{\omega}$ (nrad)', fontsize=fs)
@@ -479,12 +500,14 @@ def plot_waveforms(stt, fmin=None, fmax=None):
                            color='k',
                            label=f'{tr.stats.station}.{tr.stats.channel} (integrated)'
                            )
-            axes[i+6].plot(tr.times()*tscale,
-                           regression_results[tr.stats.channel]['residual'] * j_scale,
-                           color='red',
-                           ls='--',
-                           label=f'Residual (VR={round(regression_results[tr.stats.channel]["var_reduction"], 1)}%'
-                           )
+            if tr.stats.channel in regression_results:
+                axes[i+6].plot(
+                    tr.times()*tscale,
+                    regression_results[tr.stats.channel]['residual'] * j_scale,
+                    color='red',
+                    ls='--',
+                    label=f"Residual (VR={round(regression_results[tr.stats.channel].get('var_reduction', 0.0), 1)}%)"
+                )
             ymax = np.max(np.abs(data))
             axes[i+6].set_ylim(-ymax, ymax)
             axes[i+6].set_ylabel('$\omega$ (nrad)', fontsize=fs)

@@ -222,7 +222,40 @@ def main():
         time.sleep(1)
     print()
 
-    # Sync replicated figures into docs/figures if available
+    # ─────────── Ensure ring image completeness (placeholders) ───────────
+    def ensure_full_ring_set(run_date: str):
+        """Create placeholder images in new_figures for any missing ring outputs.
+
+        Expected per ring: rotation_spectrum, sagnac_spectrum, helicorder,
+        html_sagnacspectra, html_sagnacsignal.
+        """
+        import matplotlib
+        matplotlib.use('Agg')
+        import matplotlib.pyplot as plt
+        new_dir = REPO_ROOT / 'new_figures'
+        new_dir.mkdir(exist_ok=True)
+        expected_templates = [
+            'rotation_spectrum_R{r}.png',
+            'sagnac_spectrum_R{r}.png',
+            'helicorder_R{r}.png',
+            'html_sagnacspectra_R{r}.png',
+            'html_sagnacsignal_R{r}.png',
+        ]
+        for r in ['U','V','W','Z']:
+            for tmpl in expected_templates:
+                fname = tmpl.format(r=r)
+                fpath = new_dir / fname
+                if not fpath.exists():
+                    fig, ax = plt.subplots(figsize=(6,3.2))
+                    ax.text(0.5,0.6,f"R{r} {fname.split('_R')[0]}",ha='center',va='center',fontsize=12,weight='bold')
+                    ax.text(0.5,0.35, run_date, ha='center', va='center', fontsize=10, color='0.3')
+                    ax.text(0.5,0.15,'(placeholder – no data)',ha='center',va='center',fontsize=9,color='crimson')
+                    ax.axis('off')
+                    fig.savefig(fpath, dpi=110, bbox_inches='tight'); plt.close(fig)
+                    print(f"ℹ️  Placeholder created → {fpath.name}")
+    ensure_full_ring_set(CFG['run_date'])
+
+    # Sync replicated figures (and static assets) into docs/figures/new
     try:
         new_dir = REPO_ROOT / 'new_figures'
         docs_figs_new = REPO_ROOT / 'docs' / 'figures' / 'new'
@@ -250,6 +283,20 @@ def main():
                     copied += 1
                 except Exception as e:
                     print(f"⚠️  Copy failed for {png.name}: {e}")
+            # Copy static beam‑wander images + oops fallback if referenced
+            static_sources = [REPO_ROOT / 'docs' / 'figures', REPO_ROOT / 'figures']
+            static_names = ['BW_ROMY_10_BJZ.png','BW_ROMY__BJU.png','BW_ROMY__BJV.png','BW_ROMY__BJW.png','oops.png']
+            for name in static_names:
+                if not (docs_figs_new / name).exists():
+                    for src_dir in static_sources:
+                        src_file = src_dir / name
+                        if src_file.exists():
+                            try:
+                                shutil.copy2(src_file, docs_figs_new / name)
+                                copied += 1
+                            except Exception as e:
+                                print(f"⚠️  Copy static failed for {name}: {e}")
+                            break
             # Report missing expected patterns
             missing = []
             for pattern in expected_patterns:

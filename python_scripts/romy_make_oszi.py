@@ -23,15 +23,26 @@ from PIL import Image, ImageFile
 try:
     from ds1054z import DS1054Z
 except ImportError:
-    print("Error: ds1054z library not found. Install with: pip install ds1054z")
-    sys.exit(1)
+    print("⚠ ds1054z library not found – creating placeholder oscilloscope image")
+    import matplotlib.pyplot as plt
+    REPO_ROOT = Path(__file__).resolve().parents[1]
+    FIG_DIR   = REPO_ROOT / "new_figures"; FIG_DIR.mkdir(exist_ok=True)
+    fig, ax = plt.subplots(figsize=(10,6))
+    ax.text(0.5,0.55,"Oscilloscope Capture",ha='center',va='center',fontsize=18,weight='bold')
+    ax.text(0.5,0.35,'Dependency ds1054z missing',ha='center',va='center',fontsize=12,color='crimson')
+    ax.text(0.5,0.2,datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC'),ha='center',va='center',fontsize=10,color='0.3')
+    ax.axis('off')
+    out = FIG_DIR / 'html_oszi.png'
+    fig.savefig(out,dpi=150,bbox_inches='tight'); plt.close(fig)
+    sys.exit(0)
 
 warnings.filterwarnings("ignore")
 plt.rcParams["agg.path.chunksize"] = 10_000
 
 # ─────────── User-specific paths ─────────────────────────────────────────
 REPO_ROOT = Path(__file__).resolve().parents[1]
-FIG_DIR   = REPO_ROOT / "figures"
+# Use unified build artifact directory new_figures
+FIG_DIR   = REPO_ROOT / "new_figures"
 FIG_DIR.mkdir(exist_ok=True)
 
 # ─────────── Configuration ───────────────────────────────────────────────
@@ -113,6 +124,14 @@ def main():
     # Capture screenshot
     temp_file = capture_scope_screenshot()
     if not temp_file:
+        # write placeholder
+        fig, ax = plt.subplots(figsize=(10,6))
+        ax.text(0.5,0.55,"Oscilloscope Capture",ha='center',va='center',fontsize=18,weight='bold')
+        ax.text(0.5,0.35,'Connection failed',ha='center',va='center',fontsize=12,color='crimson')
+        ax.text(0.5,0.2,datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC'),ha='center',va='center',fontsize=10,color='0.3')
+        ax.axis('off')
+        out = FIG_DIR / 'html_oszi.png'
+        fig.savefig(out,dpi=150,bbox_inches='tight'); plt.close(fig)
         return
     
     # Create figure
@@ -124,7 +143,7 @@ def main():
     try:
         png_name = FIG_DIR / "html_oszi.png"
         fig.savefig(png_name, dpi=CFG["dpi"], bbox_inches="tight", 
-                   facecolor='white', edgecolor='none')
+                    facecolor='white', edgecolor='none')
         print(f"✔ saved figure → {png_name}")
     except PermissionError:
         png_name = REPO_ROOT / "local_output" / "html_oszi.png"

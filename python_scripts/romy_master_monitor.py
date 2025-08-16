@@ -16,7 +16,7 @@ Usage: python romy_master_monitor.py [YYYY-MM-DD]
 """
 
 # ─────────── std-lib / 3-party ───────────────────────────────────────────
-import sys, os, subprocess, time, argparse
+import sys, os, subprocess, time, argparse, shutil
 from datetime import date, timedelta, datetime
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -225,18 +225,39 @@ def main():
     # Sync replicated figures into docs/figures if available
     try:
         new_dir = REPO_ROOT / 'new_figures'
-        docs_figs = REPO_ROOT / 'docs' / 'figures'
-        docs_figs.mkdir(parents=True, exist_ok=True)
+        docs_figs_new = REPO_ROOT / 'docs' / 'figures' / 'new'
+        docs_figs_new.mkdir(parents=True, exist_ok=True)
+        # Clean out old contents
+        for old in docs_figs_new.glob('*.png'):
+            try: old.unlink()
+            except Exception: pass
+        expected_patterns = [
+            'rotation_spectrum_R*.png',
+            'sagnac_spectrum_R*.png',
+            'helicorder_R*.png',
+            'html_sagnacspectra_R*.png',
+            'html_sagnacsignal_R*.png',
+            'html_oszi.png',
+            'html_backscatter.png', 'html_beamwalk.png', 'html_beatdrift.png',
+            'html_environmentals.png', 'html_romy_baro.png'
+        ]
+        copied = 0
         if new_dir.exists():
+            # Copy everything present
             for png in new_dir.glob('*.png'):
-                target = docs_figs / png.name
                 try:
-                    if not target.exists() or png.stat().st_mtime > target.stat().st_mtime:
-                        data = png.read_bytes()
-                        target.write_bytes(data)
+                    shutil.copy2(png, docs_figs_new / png.name)
+                    copied += 1
                 except Exception as e:
                     print(f"⚠️  Copy failed for {png.name}: {e}")
-            print(f"🔄 Synced new_figures → docs/figures")
+            # Report missing expected patterns
+            missing = []
+            for pattern in expected_patterns:
+                if not list(new_dir.glob(pattern)):
+                    missing.append(pattern)
+            if missing:
+                print('⚠️  Missing expected outputs:', ', '.join(missing))
+        print(f"🔄 Synced new_figures → docs/figures/new ({copied} files)")
     except Exception as e:
         print(f"⚠️  Figure sync skipped: {e}")
     

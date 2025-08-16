@@ -33,7 +33,7 @@ plt.rcParams["agg.path.chunksize"] = 10_000
 MOUNT = Path(os.getenv("ROMY_MOUNT", "/import/freenas-ffb-01-data")).expanduser()
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-FIG_DIR   = REPO_ROOT / "figures"
+FIG_DIR   = REPO_ROOT / "new_figures"
 FIG_DIR.mkdir(exist_ok=True)
 
 # ─────────── CLI arguments ───────────────────────────────────────────────
@@ -150,7 +150,13 @@ def main():
         rots.append(tr_rot.data.astype(float))
 
     if not psds:
-        print(f"✖ No usable data found for {RUN_DATE}")
+        print(f"✖ No usable data found for {RUN_DATE} – writing placeholder image")
+        fig, ax = plt.subplots(figsize=(8,4))
+        ax.text(0.5,0.55,f"R{RING} Sagnac Spectra + Helicorder\n{RUN_DATE}",ha='center',va='center',fontsize=16,weight='bold')
+        ax.text(0.5,0.25,'No data available',ha='center',va='center',fontsize=12,color='crimson')
+        ax.axis('off')
+        placeholder = FIG_DIR / f"html_sagnacspectra_R{RING}.png"
+        fig.savefig(placeholder,dpi=150,bbox_inches='tight'); plt.close(fig)
         return
 
         # ---------- pickle ----------------------------------------------------

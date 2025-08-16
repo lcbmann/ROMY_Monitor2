@@ -16,7 +16,7 @@ warnings.filterwarnings('ignore')
 
 MOUNT = Path(os.getenv('ROMY_MOUNT','/import/freenas-ffb-01-data')).expanduser()
 REPO = Path(__file__).resolve().parents[1]
-FIG_DIR = REPO/'docs'/'figures'; FIG_DIR.mkdir(parents=True, exist_ok=True)
+FIG_DIR = REPO/'new_figures'; FIG_DIR.mkdir(parents=True, exist_ok=True)
 
 if len(sys.argv) < 2 or sys.argv[1].upper() not in 'ZUVW':
     sys.exit('Usage: python romy_make_sagnacsignal.py <Z|U|V|W> [YYYY-MM-DD]')
@@ -42,7 +42,14 @@ def read_day(seed, day):
 seed = f'BW.DROMY..FJ{RING}'
 st = read_day(seed, RUN_DATE)
 if not st:
-    print('✖ no data')
+    print('✖ no data – writing placeholder image')
+    import matplotlib.pyplot as plt
+    fig, ax = plt.subplots(figsize=(15,4))
+    ax.text(0.5,0.55,f"R{RING} Sagnac signal\n{RUN_DATE}",ha='center',va='center',fontsize=16,weight='bold')
+    ax.text(0.5,0.25,'No data available',ha='center',va='center',fontsize=12,color='crimson')
+    ax.axis('off')
+    out = FIG_DIR/f'html_sagnacsignal_R{RING}.png'
+    fig.savefig(out,dpi=150,bbox_inches='tight'); plt.close(fig)
     sys.exit(0)
 tr = st[0]; tr.trim(UTCDateTime(RUN_DATE), UTCDateTime(RUN_DATE)+86400)
 

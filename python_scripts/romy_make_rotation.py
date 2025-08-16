@@ -30,11 +30,23 @@ plt.rcParams["agg.path.chunksize"] = 10_000
 # ─────────── User‑specific paths ─────────────────────────────────────────
 MOUNT     = Path(os.getenv("ROMY_MOUNT", "/import/freenas-ffb-01-data")).expanduser()
 REPO_ROOT = Path(__file__).resolve().parents[1]
-FIG_DIR   = REPO_ROOT / "figures"; FIG_DIR.mkdir(exist_ok=True)
+FIG_DIR   = REPO_ROOT / "new_figures"; FIG_DIR.mkdir(exist_ok=True)
 
 # Spectra helper (Andreas)
 sys.path.append(str(REPO_ROOT / "develop" / "spectra"))
-from spectra import spectra                # noqa: E402
+try:
+    from spectra import spectra                # noqa: E402
+except Exception as e:  # create placeholder and exit gracefully
+    import matplotlib.pyplot as plt
+    print(f"✖ Could not import spectra module: {e} – creating placeholder images")
+    for ring in (['Z'] if 'RINGS' not in globals() else RINGS):
+        fig, ax = plt.subplots(figsize=(8,4))
+        ax.text(0.5,0.55,f"R{ring} Rotation Spectrum\n{date.today()}",ha='center',va='center',fontsize=16,weight='bold')
+        ax.text(0.5,0.25,'Dependency missing',ha='center',va='center',fontsize=12,color='crimson')
+        ax.axis('off')
+        out = FIG_DIR / f"rotation_spectrum_R{ring}.png"
+        fig.savefig(out,dpi=150,bbox_inches='tight'); plt.close(fig)
+    sys.exit(0)
 
 # Progress bar (graceful fallback)
 try:
@@ -167,7 +179,14 @@ def work(ring: str, run_date: str) -> bool:
             big_stream += st
 
     if not big_stream:
-        print("  ✖ No data – skipping")
+        print("  ✖ No data – writing placeholder")
+        import matplotlib.pyplot as plt
+        fig, ax = plt.subplots(figsize=(8,4))
+        ax.text(0.5,0.55,f"R{ring} Rotation Spectrum\n{run_date}",ha='center',va='center',fontsize=16,weight='bold')
+        ax.text(0.5,0.25,'No data available',ha='center',va='center',fontsize=12,color='crimson')
+        ax.axis('off')
+        out_png = FIG_DIR / f"rotation_spectrum_R{ring}.png"
+        fig.savefig(out_png,dpi=CFG['dpi'],bbox_inches='tight'); plt.close(fig)
         return False
 
     big_stream.merge(method=1, fill_value="interpolate")

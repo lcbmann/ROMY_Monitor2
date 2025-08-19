@@ -61,12 +61,26 @@ if tr.stats.sampling_rate > 5:
 
 t = np.linspace(0,24,len(tr.data))
 fig, ax = plt.subplots(figsize=(15,4))
-ax.plot(t, tr.data, lw=0.4, color='k')
+
+# Use a more visible color scheme based on the ring
+ring_colors = {
+    'Z': 'tab:orange',
+    'U': 'deeppink',
+    'V': 'tab:blue', 
+    'W': 'darkblue'
+}
+line_color = ring_colors.get(RING, 'tab:blue')  # Default to blue if ring not in dict
+
+ax.plot(t, tr.data, lw=0.6, color=line_color)
 ax.set_xlim(0,24)
-ax.set_xlabel('Hours UTC')
-ax.set_ylabel('Counts')
-ax.set_title(f'Sagnac signal R{RING} – {RUN_DATE}')
-ax.grid(ls=':',alpha=.5)
+ax.set_xlabel('Hours UTC', fontsize=11)
+ax.set_ylabel('Counts', fontsize=11)
+ax.set_title(f'Sagnac signal R{RING} – {RUN_DATE}', fontsize=13)
+ax.grid(ls=':',alpha=.6)
+ax.tick_params(labelsize=10)
+
+# Add background to improve readability
+ax.set_facecolor('#f8f9fa')
 fig.tight_layout()
 out = FIG_DIR/f'html_sagnacsignal_R{RING}.png'
 fig.savefig(out, dpi=150, bbox_inches='tight'); plt.close(fig)

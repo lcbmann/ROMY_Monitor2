@@ -33,8 +33,9 @@ def _parse_cli():
         description="Run ROMY monitoring scripts",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
-    parser.add_argument("rings", nargs="*", default=["U","V","W","Z"],
-                        help="Subset of rings to process (U V W Z). If omitted: all.")
+    # Changed order to Z,U,V,W for consistency across all visualizations
+    parser.add_argument("rings", nargs="*", default=["Z","U","V","W"],
+                        help="Subset of rings to process (Z U V W). If omitted: all.")
     parser.add_argument("--date", dest="run_date", default=None,
                         help="Target date YYYY-MM-DD (defaults to yesterday)")
     parser.add_argument("--max-workers", type=int, default=2,
@@ -66,14 +67,17 @@ SCRIPTS = {
     # rotation spectra script (colour matched) expects [RING [DATE]]
     "rotation_psd": "romy_make_rotation.py", 
     "helicorder": "romy_make_helicorder.py",
+    "rotation_combo": "romy_make_rotation_combo.py",
     "combined_spectra": "romy_make_spectra.py",
     "oscilloscope": "romy_make_oszi.py",
     "backscatter_full": "romy_make_backscatter_full.py",
     "beamwalk_full": "romy_make_beamwalk_full.py",
+    "beam_wander_helicorder": "romy_make_beam_wander_helicorder.py",  # Added new script
     "beatdrift_full": "romy_make_beatdrift_full.py",
     "environmentals_full": "romy_make_environmentals_full.py",
     "barometric_full": "romy_make_barometric_full.py",
     "sagnac_signal": "romy_make_sagnacsignal.py",
+    "sagnac_signals_combined": "romy_make_sagnac_signals_combined.py",
 }
 
 # ─────────── Helper: run script with error handling ─────────────────────
@@ -124,7 +128,7 @@ def run_ring_scripts(ring):
     ring_results = {}
     
     # Sequential execution for each ring (to avoid resource conflicts)
-    for script_type in ["sagnac_spectrum", "rotation_psd", "helicorder", "combined_spectra", "sagnac_signal"]:
+    for script_type in ["sagnac_spectrum", "rotation_psd", "helicorder", "rotation_combo", "combined_spectra", "sagnac_signal"]:
         script_file = SCRIPTS[script_type]
         script_name = f"{script_type}_{ring}"
         # Per‑script CLI conventions
@@ -212,9 +216,11 @@ def main():
     legacy_scripts = [
         ("backscatter_full", []),
         ("beamwalk_full", []),
+        ("beam_wander_helicorder", []),  # Added new script to ensure beam wander helicorder images
         ("beatdrift_full", []),
         ("environmentals_full", ["Z"]),  # environmentals primarily ring Z
         ("barometric_full", []),
+        ("sagnac_signals_combined", [CFG["run_date"]]),  # Added combined sagnac signals
     ]
     for key, args in legacy_scripts:
         success, stdout, stderr = run_script(key, SCRIPTS[key], args)
@@ -240,6 +246,7 @@ def main():
             'helicorder_R{r}.png',
             'html_sagnacspectra_R{r}.png',
             'html_sagnacsignal_R{r}.png',
+            'html_rotationcombo_R{r}.png',
         ]
         for r in ['U','V','W','Z']:
             for tmpl in expected_templates:
@@ -270,6 +277,7 @@ def main():
             'helicorder_R*.png',
             'html_sagnacspectra_R*.png',
             'html_sagnacsignal_R*.png',
+            'html_rotationcombo_R*.png',
             'html_oszi.png',
             'html_backscatter.png', 'html_beamwalk.png', 'html_beatdrift.png',
             'html_environmentals.png', 'html_romy_baro.png'
@@ -285,7 +293,10 @@ def main():
                     print(f"⚠️  Copy failed for {png.name}: {e}")
             # Copy static beam‑wander images + oops fallback if referenced
             static_sources = [REPO_ROOT / 'docs' / 'figures', REPO_ROOT / 'figures']
-            static_names = ['BW_ROMY_10_BJZ.png','BW_ROMY__BJU.png','BW_ROMY__BJV.png','BW_ROMY__BJW.png','oops.png']
+            static_names = [
+                'BW_ROMY_10_BJZ.png','BW_ROMY__BJU.png','BW_ROMY__BJV.png','BW_ROMY__BJW.png',
+                'oops.png'
+            ]
             for name in static_names:
                 if not (docs_figs_new / name).exists():
                     for src_dir in static_sources:

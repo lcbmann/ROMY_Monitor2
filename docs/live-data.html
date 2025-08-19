@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ROMY Ring‑Laser Monitor – Live Data Request</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="style.css" />
+  <script src="js/navigation.js"></script>
+  <style>
+    .results-grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap:1rem; }
+    .img-wrap { border:1px solid #ddd; padding:.5rem; background:#fafafa; }
+    .img-wrap img { max-width:100%; height:auto; display:block; margin:0 auto; }
+    code { background:#f3f3f3; padding:2px 4px; border-radius:4px; }
+  </style>
+</head>
+<body>
+  <section class="hero is-info is-small hero-banner">
+    <div class="hero-body">
+      <div class="container has-text-centered">
+        <h1 class="title is-1 has-text-white">Live Data Request</h1>
+        <p class="subtitle is-4 has-text-white">On‑demand helicorder & rotation spectra (does not affect daily pages)</p>
+      </div>
+    </div>
+  </section>
+
+  <div id="navigation-placeholder"></div>
+
+  <section class="section pt-4">
+    <div class="container">
+      <div class="box">
+        <form id="requestForm" class="mb-3">
+          <div class="columns is-multiline">
+            <div class="column is-3">
+              <label class="label">Date (UTC)</label>
+              <input class="input" type="date" id="dateInput" required />
+            </div>
+            <div class="column is-5">
+              <label class="label">Rings</label>
+              <div class="tags">
+                <label class="tag is-light"><input type="checkbox" name="rings" value="Z" checked />&nbsp;Z</label>
+                <label class="tag is-light"><input type="checkbox" name="rings" value="U" checked />&nbsp;U</label>
+                <label class="tag is-light"><input type="checkbox" name="rings" value="V" checked />&nbsp;V</label>
+                <label class="tag is-light"><input type="checkbox" name="rings" value="W" checked />&nbsp;W</label>
+              </div>
+            </div>
+            <div class="column is-4">
+              <label class="label">Actions</label>
+              <div>
+                <button type="submit" class="button is-primary mr-2" id="submitBtn">Generate</button>
+                <button type="button" class="button" id="clearBtn">Clear Results</button>
+              </div>
+            </div>
+          </div>
+          <p class="is-size-7 has-text-grey">Images are created under <code>figures/live/&lt;DATE&gt;/</code> and won't replace the daily monitoring graphics.</p>
+        </form>
+        <progress class="progress is-small is-info" max="100" id="progressBar" style="display:none;">Loading</progress>
+        <div id="message" class="mb-3 is-size-7"></div>
+        <div id="results" class="results-grid"></div>
+      </div>
+
+      <div class="content is-size-7 has-text-grey">
+        <p><strong>Note:</strong> This page requires the live Flask service (<code>live/live_server.py</code>) to be running on the server hosting this site. Without the backend, requests will fail.</p>
+        <p>API endpoint: <code>POST /api/live-data</code> JSON body <code>{"date":"YYYY-MM-DD","rings":["Z","U",...]}</code></p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const form = document.getElementById('requestForm');
+    const resultsDiv = document.getElementById('results');
+    const msg = document.getElementById('message');
+    const prog = document.getElementById('progressBar');
+    document.getElementById('clearBtn').onclick = () => { resultsDiv.innerHTML=''; msg.textContent=''; };
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const date = document.getElementById('dateInput').value;
+      const rings = [...form.querySelectorAll('input[name="rings"]:checked')].map(c=>c.value);
+      if(!date){ alert('Select date'); return; }
+      if(!rings.length){ alert('Select at least one ring'); return; }
+      prog.style.display='block'; msg.textContent='Requesting generation…'; resultsDiv.innerHTML='';
+      try {
+        const r = await fetch('/api/live-data', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({date, rings})});
+        if(!r.ok){ throw new Error('Request failed '+r.status); }
+        const data = await r.json();
+        msg.textContent = 'Completed for '+data.date;
+        Object.entries(data.results).forEach(([ring, paths])=>{
+          if(paths.error){
+            const d=document.createElement('div'); d.className='notification is-danger is-light'; d.textContent='R'+ring+': '+paths.error; resultsDiv.appendChild(d); return;
+          }
+            const wrap=document.createElement('div'); wrap.className='img-wrap';
+            wrap.innerHTML = `<h5 class=\"title is-6\">Ring ${ring}</h5>
+               <figure><img src=\"${paths.helicorder}?v=${Date.now()}\" alt=\"Helicorder R${ring}\"></figure>
+               <figure class=\"mt-2\"><img src=\"${paths.rotation}?v=${Date.now()}\" alt=\"Rotation Spectra R${ring}\"></figure>`;
+            resultsDiv.appendChild(wrap);
+        });
+      } catch(err){
+        msg.innerHTML = '<span class="has-text-danger">Error: '+err.message+'</span>';
+      } finally {
+        prog.style.display='none';
+      }
+    });
+  </script>
+</body>
+</html>

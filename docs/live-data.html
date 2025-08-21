@@ -29,39 +29,17 @@
   <section class="section pt-4">
     <div class="container">
       <div class="box">
-        <form id="requestForm" class="mb-3">
-          <div class="columns is-multiline">
-            <div class="column is-3">
-              <label class="label">Date (UTC)</label>
-              <input class="input" type="date" id="dateInput" required />
-            </div>
-            <div class="column is-5">
-              <label class="label">Rings</label>
-              <div class="tags">
-                <label class="tag is-light"><input type="checkbox" name="rings" value="Z" checked />&nbsp;Z</label>
-                <label class="tag is-light"><input type="checkbox" name="rings" value="U" checked />&nbsp;U</label>
-                <label class="tag is-light"><input type="checkbox" name="rings" value="V" checked />&nbsp;V</label>
-                <label class="tag is-light"><input type="checkbox" name="rings" value="W" checked />&nbsp;W</label>
-              </div>
-            </div>
-            <div class="column is-4">
-              <label class="label">Actions</label>
-              <div>
-                <button type="submit" class="button is-primary mr-2" id="submitBtn">Generate</button>
-                <button type="button" class="button" id="clearBtn">Clear Results</button>
-              </div>
-            </div>
-          </div>
-          <p class="is-size-7 has-text-grey">Images are created under <code>figures/live/&lt;DATE&gt;/</code> and won't replace the daily monitoring graphics.</p>
-        </form>
-        <progress class="progress is-small is-info" max="100" id="progressBar" style="display:none;">Loading</progress>
-        <div id="message" class="mb-3 is-size-7"></div>
-        <div id="results" class="results-grid"></div>
+        <h2 class="title is-4">Recent Live Plots (Coming Soon)</h2>
+        <p class="is-size-6 mb-3">This page will soon display the most recent helicorder and rotation spectra images for each ring. You’ll be able to scroll through the last few months of stored plots, updated daily.</p>
+        <div class="notification is-info is-light">
+          <strong>Note:</strong> Live on-demand plot generation is no longer supported. Instead, this page will show a gallery of the latest available images, updated automatically.
+        </div>
+        <div class="results-grid" style="min-height:200px;">
+          <!-- Gallery of recent images will appear here in the future. -->
+        </div>
       </div>
-
       <div class="content is-size-7 has-text-grey">
-        <p><strong>Note:</strong> This page requires the live Flask service (<code>live/live_server.py</code>) to be running on the server hosting this site. Without the backend, requests will fail.</p>
-        <p>API endpoint: <code>POST /api/live-data</code> JSON body <code>{"date":"YYYY-MM-DD","rings":["Z","U",...]}</code></p>
+        <p>Plots will be stored in <code>figures/live/&lt;DATE&gt;/</code> and shown here for easy browsing.</p>
       </div>
     </div>
   </section>

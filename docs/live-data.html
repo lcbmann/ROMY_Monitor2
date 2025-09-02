@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
   <link rel="stylesheet" href="style.css" />
   <script src="js/navigation.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
     .results-grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap:1rem; }
     .img-wrap { border:1px solid #ddd; padding:.5rem; background:#fafafa; }
@@ -148,20 +149,25 @@
 
     loadManifest();
   </script>
+  <!-- ───────── minimal lightbox ───────── -->
   <script>
-    // Simple lightbox (reuse pattern from other pages)
-    (function(){
+    (() => {
       const overlay = document.createElement('div');
       overlay.id = 'overlay';
-      overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;z-index:9999;align-items:center;justify-content:center;padding:2rem;';
-      overlay.innerHTML = '<img style="max-width:95%;max-height:95%;box-shadow:0 0 12px #000;border:1px solid #333;">';
+      overlay.innerHTML = '<img>';
       document.body.appendChild(overlay);
       const big = overlay.querySelector('img');
+
       document.addEventListener('click', e => {
-        if(e.target.classList && e.target.classList.contains('lb')){ big.src = e.target.src; overlay.style.display='flex'; }
+        if (!e.target.classList.contains('lb')) return;
+        big.src = e.target.src;
+        overlay.classList.add('show');
       });
-      overlay.addEventListener('click', ()=> overlay.style.display='none');
-      document.addEventListener('keyup', e => { if(e.key==='Escape') overlay.style.display='none'; });
+
+      overlay.addEventListener('click', () => overlay.classList.remove('show'));
+      document.addEventListener('keyup', e => {
+        if (e.key === 'Escape') overlay.classList.remove('show');
+      });
     })();
   </script>
 </body>

@@ -18,8 +18,8 @@
   <section class="hero is-info is-small hero-banner">
     <div class="hero-body">
       <div class="container has-text-centered">
-        <h1 class="title is-1 has-text-white">Live Data Request</h1>
-        <p class="subtitle is-4 has-text-white">On‑demand helicorder & rotation spectra (does not affect daily pages)</p>
+  <h1 class="title is-1 has-text-white"><i class="fas fa-satellite-dish mr-2"></i>Live Data & Archive</h1>
+  <p class="subtitle is-4 has-text-white">Recent helicorder & rotation spectra – browse last days, per ring</p>
       </div>
     </div>
   </section>
@@ -29,55 +29,140 @@
   <section class="section pt-4">
     <div class="container">
       <div class="box">
-        <h2 class="title is-4">Recent Live Plots (Coming Soon)</h2>
-        <p class="is-size-6 mb-3">This page will soon display the most recent helicorder and rotation spectra images for each ring. You’ll be able to scroll through the last few months of stored plots, updated daily.</p>
-        <div class="notification is-info is-light">
-          <strong>Note:</strong> This page will show a gallery of the latest available images, updated automatically.
+  <h2 class="title is-5 mb-2"><i class="fas fa-history mr-2"></i>Archive Browser</h2>
+  <div class="level mb-3">
+          <div class="level-left">
+            <div class="level-item">
+              <button id="prevDay" class="button is-small" title="Previous Day">&larr;</button>
+            </div>
+            <div class="level-item">
+              <input type="date" id="datePicker" class="input is-small" />
+            </div>
+            <div class="level-item">
+              <button id="nextDay" class="button is-small" title="Next Day">&rarr;</button>
+            </div>
+            <div class="level-item">
+              <button id="todayBtn" class="button is-small is-link" title="Jump to most recent">Today</button>
+            </div>
+            <div class="level-item">
+              <div class="select is-small">
+                <select id="ringFilter">
+                  <option value="ALL" selected>All Rings</option>
+                  <option value="Z">Ring Z</option>
+                  <option value="U">Ring U</option>
+                  <option value="V">Ring V</option>
+                  <option value="W">Ring W</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="level-right">
+            <div class="level-item">
+              <span id="info" class="is-size-7 has-text-grey"></span>
+            </div>
+          </div>
         </div>
-        <div class="results-grid" style="min-height:200px;">
-          <!-- Gallery of recent images will appear here in the future. -->
-        </div>
+        <div id="gallery" class="results-grid" style="min-height:240px;"></div>
+        <div class="mt-3 is-size-7 has-text-grey" id="meta"></div>
       </div>
       <div class="content is-size-7 has-text-grey">
-        <p>Plots will be stored in <code>figures/live/&lt;DATE&gt;/</code> and shown here for easy browsing.</p>
+  <p><i class="fas fa-info-circle mr-1"></i> Shows archived helicorder & rotation spectra for each ring. Storage window: last ≤ <span id="retWindow">7</span> days. Images older than this are purged automatically by the archive build script.</p>
+        <p>Location: <code>docs/figures/live/&lt;DATE&gt;/</code> manifest: <code>docs/figures/live/manifest.json</code></p>
       </div>
     </div>
   </section>
 
   <script>
-    const form = document.getElementById('requestForm');
-    const resultsDiv = document.getElementById('results');
-    const msg = document.getElementById('message');
-    const prog = document.getElementById('progressBar');
-    document.getElementById('clearBtn').onclick = () => { resultsDiv.innerHTML=''; msg.textContent=''; };
-    form.addEventListener('submit', async (e)=>{
-      e.preventDefault();
-      const date = document.getElementById('dateInput').value;
-      const rings = [...form.querySelectorAll('input[name="rings"]:checked')].map(c=>c.value);
-      if(!date){ alert('Select date'); return; }
-      if(!rings.length){ alert('Select at least one ring'); return; }
-      prog.style.display='block'; msg.textContent='Requesting generation…'; resultsDiv.innerHTML='';
+    const gallery = document.getElementById('gallery');
+    const datePicker = document.getElementById('datePicker');
+    const prevBtn = document.getElementById('prevDay');
+    const nextBtn = document.getElementById('nextDay');
+    const todayBtn = document.getElementById('todayBtn');
+  const info = document.getElementById('info');
+    const meta = document.getElementById('meta');
+    const retWindowSpan = document.getElementById('retWindow');
+  const ringFilter = document.getElementById('ringFilter');
+
+    let manifest = null;
+    let dates = [];
+    let currentIndex = 0;
+
+    async function loadManifest(){
       try {
-        const r = await fetch('/api/live-data', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({date, rings})});
-        if(!r.ok){ throw new Error('Request failed '+r.status); }
-        const data = await r.json();
-        msg.textContent = 'Completed for '+data.date;
-        Object.entries(data.results).forEach(([ring, paths])=>{
-          if(paths.error){
-            const d=document.createElement('div'); d.className='notification is-danger is-light'; d.textContent='R'+ring+': '+paths.error; resultsDiv.appendChild(d); return;
-          }
-            const wrap=document.createElement('div'); wrap.className='img-wrap';
-            wrap.innerHTML = `<h5 class=\"title is-6\">Ring ${ring}</h5>
-               <figure><img src=\"${paths.helicorder}?v=${Date.now()}\" alt=\"Helicorder R${ring}\"></figure>
-               <figure class=\"mt-2\"><img src=\"${paths.rotation}?v=${Date.now()}\" alt=\"Rotation Spectra R${ring}\"></figure>`;
-            resultsDiv.appendChild(wrap);
-        });
-      } catch(err){
-        msg.innerHTML = '<span class="has-text-danger">Error: '+err.message+'</span>';
-      } finally {
-        prog.style.display='none';
+        const r = await fetch('figures/live/manifest.json?v=' + Date.now());
+        if(!r.ok) throw new Error('manifest missing');
+        manifest = await r.json();
+        dates = manifest.dates || [];
+        retWindowSpan.textContent = manifest.retention_days || dates.length;
+        if(!dates.length){
+          gallery.innerHTML = '<div class="notification is-warning is-light">No archive data yet.</div>';
+          return;
+        }
+        // Set to most recent (index 0 because sorted desc in script)
+        currentIndex = 0;
+        setDatePicker(dates[currentIndex]);
+        renderDay();
+      } catch(e){
+        gallery.innerHTML = '<div class="notification is-danger is-light">Failed to load archive manifest.</div>';
       }
-    });
+    }
+
+    function setDatePicker(d){ datePicker.value = d; }
+    function getDate() { return datePicker.value; }
+
+    function renderDay(){
+      const d = getDate();
+      const dayImages = manifest.images[d] || {};
+      gallery.innerHTML='';
+      const rings = ['Z','U','V','W'];
+      rings.forEach(r => {
+        if(ringFilter.value !== 'ALL' && ringFilter.value !== r) return;
+        const e = dayImages[r];
+        if(!e){ return; }
+        const wrap = document.createElement('div');
+        wrap.className='img-wrap';
+        wrap.innerHTML = `<h5 class="title is-6 mb-1">Ring ${r}</h5>`;
+        if(e.helicorder){
+          wrap.innerHTML += `<figure><img class="lb" loading="lazy" src="${e.helicorder}?v=${Date.now()}" alt="Helicorder R${r}"></figure>`;
+        }
+        if(e.rotation){
+          wrap.innerHTML += `<figure class="mt-2"><img class="lb" loading="lazy" src="${e.rotation}?v=${Date.now()}" alt="Rotation Spectra R${r}"></figure>`;
+        }
+        gallery.appendChild(wrap);
+      });
+      info.textContent = d + `  (${currentIndex+1}/${dates.length})`;
+      meta.textContent = 'Generated at (manifest): ' + (manifest.generated_at || '');
+      updateButtons();
+    }
+
+    function updateButtons(){
+      prevBtn.disabled = currentIndex >= dates.length - 1;
+      nextBtn.disabled = currentIndex <= 0;
+    }
+
+    prevBtn.onclick = () => { if(currentIndex < dates.length-1){ currentIndex++; setDatePicker(dates[currentIndex]); renderDay(); } };
+    nextBtn.onclick = () => { if(currentIndex > 0){ currentIndex--; setDatePicker(dates[currentIndex]); renderDay(); } };
+    todayBtn.onclick = () => { currentIndex = 0; setDatePicker(dates[0]); renderDay(); };
+  datePicker.onchange = () => { const d = getDate(); const idx = dates.indexOf(d); if(idx !== -1){ currentIndex = idx; renderDay(); } };
+  ringFilter.onchange = () => renderDay();
+
+    loadManifest();
+  </script>
+  <script>
+    // Simple lightbox (reuse pattern from other pages)
+    (function(){
+      const overlay = document.createElement('div');
+      overlay.id = 'overlay';
+      overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;z-index:9999;align-items:center;justify-content:center;padding:2rem;';
+      overlay.innerHTML = '<img style="max-width:95%;max-height:95%;box-shadow:0 0 12px #000;border:1px solid #333;">';
+      document.body.appendChild(overlay);
+      const big = overlay.querySelector('img');
+      document.addEventListener('click', e => {
+        if(e.target.classList && e.target.classList.contains('lb')){ big.src = e.target.src; overlay.style.display='flex'; }
+      });
+      overlay.addEventListener('click', ()=> overlay.style.display='none');
+      document.addEventListener('keyup', e => { if(e.key==='Escape') overlay.style.display='none'; });
+    })();
   </script>
 </body>
 </html>

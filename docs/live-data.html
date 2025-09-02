@@ -8,12 +8,15 @@
   <link rel="stylesheet" href="style.css" />
   <script src="js/navigation.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <!-- Flatpickr for enabled-date calendar -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <style>
     .results-grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap:1rem; }
     .img-wrap { border:1px solid #ddd; padding:.5rem; background:#fafafa; }
     .img-wrap img { max-width:100%; height:auto; display:block; margin:0 auto; }
     code { background:#f3f3f3; padding:2px 4px; border-radius:4px; }
   </style>
+  <script defer src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
 <body>
   <section class="hero is-info is-small hero-banner">
@@ -37,7 +40,7 @@
               <button id="prevDay" class="button is-small" title="Previous Day">&larr;</button>
             </div>
             <div class="level-item">
-              <input type="date" id="datePicker" class="input is-small" />
+              <input type="text" id="datePicker" class="input is-small" placeholder="Select date" />
             </div>
             <div class="level-item">
               <button id="nextDay" class="button is-small" title="Next Day">&rarr;</button>
@@ -87,6 +90,40 @@
     let manifest = null;
     let dates = [];
     let currentIndex = 0;
+    let fp = null; // flatpickr instance
+
+    function initCalendar(){
+      if(typeof flatpickr === 'undefined') return; // CDN failed, keep native behavior
+      if(fp) { fp.destroy(); fp = null; }
+      fp = flatpickr(datePicker, {
+        dateFormat: 'Y-m-d',
+        defaultDate: dates[0],
+        enable: dates.slice(), // allow only manifest dates
+        disableMobile: true,
+        // Ensure days from adjacent months that are enabled (in manifest) are visibly enabled
+        onDayCreate: function(dObj, dStr, fpInst, dayElem){
+          // flatpickr adds classes 'prevMonthDay' or 'nextMonthDay' to overflow days
+          if(dayElem.dateObj){
+            const y = dayElem.dateObj.getFullYear();
+            const m = ('0'+(dayElem.dateObj.getMonth()+1)).slice(-2);
+            const dd = ('0'+dayElem.dateObj.getDate()).slice(-2);
+            const iso = `${y}-${m}-${dd}`;
+            if(dates.indexOf(iso) !== -1){
+              // Mark as selectable & remove disabled appearance
+              dayElem.classList.remove('flatpickr-disabled');
+              dayElem.classList.remove('notAllowed');
+              // Remove grayed style of other-month day if it's valid
+              dayElem.classList.remove('prevMonthDay','nextMonthDay');
+              dayElem.removeAttribute('aria-disabled');
+            }
+          }
+        },
+        onChange: function(selectedDates, dateStr){
+          const idx = dates.indexOf(dateStr);
+          if(idx !== -1){ currentIndex = idx; renderDay(); }
+        }
+      });
+    }
 
     async function loadManifest(){
       try {
@@ -101,6 +138,7 @@
         }
         // Set to most recent (index 0 because sorted desc in script)
         currentIndex = 0;
+        initCalendar();
         setDatePicker(dates[currentIndex]);
         renderDay();
       } catch(e){
@@ -108,7 +146,10 @@
       }
     }
 
-    function setDatePicker(d){ datePicker.value = d; }
+    function setDatePicker(d){
+      if(fp){ fp.setDate(d, true); }
+      else { datePicker.value = d; }
+    }
     function getDate() { return datePicker.value; }
 
     function renderDay(){
@@ -144,7 +185,8 @@
     prevBtn.onclick = () => { if(currentIndex < dates.length-1){ currentIndex++; setDatePicker(dates[currentIndex]); renderDay(); } };
     nextBtn.onclick = () => { if(currentIndex > 0){ currentIndex--; setDatePicker(dates[currentIndex]); renderDay(); } };
     todayBtn.onclick = () => { currentIndex = 0; setDatePicker(dates[0]); renderDay(); };
-  datePicker.onchange = () => { const d = getDate(); const idx = dates.indexOf(d); if(idx !== -1){ currentIndex = idx; renderDay(); } };
+  // Fallback for when flatpickr failed to load
+  datePicker.onchange = () => { if(fp) return; const d = getDate(); const idx = dates.indexOf(d); if(idx !== -1){ currentIndex = idx; renderDay(); } };
   ringFilter.onchange = () => renderDay();
 
     loadManifest();

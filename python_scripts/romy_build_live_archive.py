@@ -1,19 +1,22 @@
 #!/usr/bin/env python3
-"""Build (or incrementally update) a rolling archive of live helicorder &
-rotation spectra images for the last N days (default 7).
+"""ROMY Monitor – Build Live Rolling Archive
 
-Features:
-  * Generates missing per‑day images (skips those already present).
-  * Stores images under  docs/figures/live/<YYYY-MM-DD>/
-        helicorder_live_R<ring>_<date>.png
-        rotation_spectrum_live_R<ring>_<date>.png
-  * Deletes any date directories older than retention window.
-  * Writes a manifest JSON: docs/figures/live/manifest.json for the web UI.
+Maintains last N days (default 7) of daily helicorder + rotation spectrum PNGs
+and a manifest for the web UI.
 
-Use:
-    python python_scripts/romy_build_live_archive.py [--days 7]
+Creates (per date under docs/figures/live/<YYYY-MM-DD>/):
+    helicorder_live_R<ring>_<date>.png
+    rotation_spectrum_live_R<ring>_<date>.png
 
-Intended to be run via cron (e.g. once per day shortly after midnight UTC).
+Also:
+    • Skips dates already complete
+    • Prunes directories older than retention window
+    • Writes docs/figures/live/manifest.json
+
+CLI:
+    python romy_build_live_archive.py [--days N]
+
+Designed for daily cron shortly after UTC midnight.
 """
 from __future__ import annotations
 import argparse, json, sys, shutil

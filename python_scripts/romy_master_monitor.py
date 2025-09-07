@@ -1,18 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-ROMY – Master Monitoring Script
-===============================
+"""ROMY Monitor – Master Orchestrator
 
-Runs all ROMY monitoring scripts for complete data processing and visualization.
-This script coordinates the execution of:
-- Sagnac spectra generation for all rings
-- Rotation PSD analysis for all rings  
-- Helicorder generation for all rings
-- Combined spectra plots for all rings
-- Oscilloscope capture
+Coordinates generation of all monitoring figures:
+    • Ring‑wise: sagnac spectra, rotation spectra, helicorder, combo spectra, raw sagnac signal
+    • Global / legacy: backscatter, beam walk, beat drift, environmentals, barometric
+    • Ancillary: oscilloscope snapshot, beam‑wander static assets, combined sagnac signals
 
-Usage: python romy_master_monitor.py [YYYY-MM-DD]
+CLI:
+    python romy_master_monitor.py [RINGS...] [--date YYYY-MM-DD]
+
+Produces/updates PNGs under new_figures/ then syncs into docs/figures/new.
+Fails gracefully per script (summary at end). Keeps placeholders so web never breaks.
 """
 
 # ─────────── std-lib / 3-party ───────────────────────────────────────────

@@ -194,6 +194,19 @@ def main():
                 print(f"💥 Ring {ring} failed: {str(e)}")
                 results[ring] = {"error": str(e)}
     
+    # Run live archive builder for the last 7 days
+    print("🗂️ Building live archive for the last 7 days...")
+    success, stdout, stderr = run_script(
+        "live_archive", 
+        "romy_build_live_archive.py", 
+        ["--days", "7"]
+    )
+    results["live_archive"] = {
+        "success": success,
+        "stdout": stdout,
+        "stderr": stderr
+    }
+    
     print()
     
     # ─────────── Phase 2: Oscilloscope capture (independent) ──────────────
@@ -349,6 +362,11 @@ def main():
         if key in results:
             status = "✅" if results[key].get("success", False) else "❌"
             print(f"    {status} {key}")
+            
+    # Live archive status
+    live_archive_result = results.get("live_archive", {})
+    live_archive_status = "✅" if live_archive_result.get("success", False) else "❌"
+    print(f"🗂️ Live Archive: {live_archive_status}")
     
     print()
     
@@ -370,6 +388,12 @@ def main():
             total_scripts += 1
             if results[key].get("success", False):
                 total_successes += 1
+    
+    # Include live archive in the count
+    if "live_archive" in results:
+        total_scripts += 1
+        if results["live_archive"].get("success", False):
+            total_successes += 1
     
     print(f"🏆 OVERALL: {total_successes}/{total_scripts} scripts completed successfully")
     

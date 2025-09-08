@@ -69,9 +69,22 @@
         <div id="gallery" class="results-grid" style="min-height:240px;"></div>
         <div class="mt-3 is-size-7 has-text-grey" id="meta"></div>
       </div>
-      <div class="content is-size-7 has-text-grey">
-  <p><i class="fas fa-info-circle mr-1"></i> Shows archived helicorder & rotation spectra for each ring. Storage window: last ≤ <span id="retWindow">7</span> days. Images older than this are purged automatically by the archive build script.</p>
-        <p>Location: <code>docs/figures/live/&lt;DATE&gt;/</code> manifest: <code>docs/figures/live/manifest.json</code></p>
+      <div class="content">
+        <div class="box">
+          <h5 class="title is-5"><i class="fas fa-info-circle mr-2"></i>About the Visualizations</h5>
+          <div class="content">
+            <h6 class="title is-6">Helicorder:</h6>
+            <p>The 24-hour helicorder plot shows the processed rotation rate data acquired during the previous day. Each trace is normalized and color-coded by the hour of the day. Any spikes or glitches in the time series are usually linked to mode jumps of the clockwise and counter-clockwise propagating beams. Episodes of high amplitude noise often relate to the absence of the Sagnac interferogram (= no rotation rate data).</p>
+            
+            <h6 class="title is-6">Rotation Spectra:</h6>
+            <p>Each line represents a power spectral density (PSD) of one hour of rotation rate data computed with Welch's method. The colormap is identical with the helicorder plots above.</p>
+          </div>
+        </div>
+        
+        <div class="is-size-7 has-text-grey">
+          <p><i class="fas fa-info-circle mr-1"></i> Shows archived helicorder & rotation spectra for each ring. Storage window: last ≤ <span id="retWindow">7</span> days. Images older than this are purged automatically by the archive build script.</p>
+          <p>Location: <code>docs/figures/live/&lt;DATE&gt;/</code> manifest: <code>docs/figures/live/manifest.json</code></p>
+        </div>
       </div>
     </div>
   </section>

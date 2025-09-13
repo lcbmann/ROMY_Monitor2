@@ -34,7 +34,7 @@
           <div class="card">
             <div class="card-header">
               <p class="card-header-title">
-                <i class="fas fa-dot-circle mr-2"></i>Beam Walk Pattern
+                <i class="fas fa-dot-circle mr-2"></i>Beam Walk Monitoring
               </p>
             </div>
             <div class="card-content">
@@ -44,9 +44,11 @@
                      onerror="this.src='./figures/oops.png'">
               </figure>
               <div class="content mt-3">
-                <p class="is-size-7 has-text-grey">
-                  <strong>Beam Walk Pattern:</strong> Overall beam wander analysis showing the movement of the laser beam spot over time. This indicates mechanical stability and alignment of the ring laser cavity mirrors.
-                </p>
+                <div class="is-size-7 has-text-grey">
+                  <p><strong>Left panels:</strong> The walk of the maximum of a 2D fitted Gaussian beam is monitored over time (X-position in the lower subpanel and Y-position in the upper subpanel). This serves as a proxy for resonator cavity deformation, which introduces instrumental effects on the data. Four cameras are currently deployed: <em>IDS00 = horizontal ring, IDS03 = horizontal ring, IDS07 = western ring, IDS05 = northern ring.</em> The <em>last reset</em> marks when the time series was re-zeroed, usually after a manual reorientation of the camera sensor.</p>
+                  <p><strong>Central panels:</strong> Spatial trajectory of the fitted beam maximum (X vs Y) illustrating the 2‑D motion of the spot on the sensor.</p>
+                  <p><strong>Right panels:</strong> Processing diagnostics generated every 10 minutes showing the 2D Gaussian fit to the camera image; this demonstrates the fitting quality and enables tracking of the beam maximum over time.</p>
+                </div>
               </div>
             </div>
           </div>
@@ -58,54 +60,7 @@
   </section>
 
   <section class="section pt-0">
-    <div class="container">
-      <h2 class="title is-4 has-text-primary">
-        <i class="fas fa-wave-square mr-2"></i>Rotation Spectra + Helicorder Overview
-      </h2>
-      <p class="mb-4 is-size-7 has-text-grey">Daily combined rotation noise spectra (left panels) with corresponding 24h helicorder traces (right overlay) for each ring. Useful to correlate transient disturbances in the time domain with broadband spectral changes impacting beam stability.</p>
-      <div class="columns is-multiline">
-        <div class="column is-6">
-          <div class="card">
-            <div class="card-header"><p class="card-header-title">Ring Z – Rotation & Helicorder</p></div>
-            <div class="card-content">
-              <figure class="image">
-                <img class="lb" data-src="./figures/new/html_rotationcombo_RZ.png" alt="Ring Z rotation spectra + helicorder" onerror="this.src='./figures/oops.png'">
-              </figure>
-            </div>
-          </div>
-        </div>
-        <div class="column is-6">
-          <div class="card">
-            <div class="card-header"><p class="card-header-title">Ring U – Rotation & Helicorder</p></div>
-            <div class="card-content">
-              <figure class="image">
-                <img class="lb" data-src="./figures/new/html_rotationcombo_RU.png" alt="Ring U rotation spectra + helicorder" onerror="this.src='./figures/oops.png'">
-              </figure>
-            </div>
-          </div>
-        </div>
-        <div class="column is-6">
-          <div class="card">
-            <div class="card-header"><p class="card-header-title">Ring V – Rotation & Helicorder</p></div>
-            <div class="card-content">
-              <figure class="image">
-                <img class="lb" data-src="./figures/new/html_rotationcombo_RV.png" alt="Ring V rotation spectra + helicorder" onerror="this.src='./figures/oops.png'">
-              </figure>
-            </div>
-          </div>
-        </div>
-        <div class="column is-6">
-          <div class="card">
-            <div class="card-header"><p class="card-header-title">Ring W – Rotation & Helicorder</p></div>
-            <div class="card-content">
-              <figure class="image">
-                <img class="lb" data-src="./figures/new/html_rotationcombo_RW.png" alt="Ring W rotation spectra + helicorder" onerror="this.src='./figures/oops.png'">
-              </figure>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- Rotation Spectra + Helicorder section removed as requested -->
   </section>
 
   <!-- ───────── cache‑buster (unchanged) ───────── -->

@@ -31,6 +31,14 @@
       </h2>
       <div class="columns is-multiline">
         <div class="column is-12">
+          <div class="notification is-light is-size-7" style="line-height:1.3">
+            <strong>Site purpose:</strong> Operational & diagnostic monitoring of the four‑component ROMY ring‑laser gyroscope. Figures auto‑refresh; click any image to enlarge.<br>
+            <strong>Key pages:</strong> Sagnac Spectra (frequency stability), Beat Drift (long‑term frequency evolution & MLTI / maintenance), Backscatter (horizontal ring monobeam diagnostics), Beam Wander (alignment), Environmental & Barometric (drivers), Live Data (direct feeds).<br>
+            <strong>References:</strong> <a href="https://www.science.org/content/article/buried-lasers-will-sense-earths-spin-and-quakes-doing-twist" target="_blank" rel="noopener">Science Feature 2017</a> | <a href="https://doi.org/10.1093/gji/ggaa614" target="_blank" rel="noopener">GJI 2021 ROMY Paper</a>.<br>
+            <strong>Credits:</strong> Site & layout: C. Bürgmann. Processing / plotting scripts: A. Brotzer. Contributions: H. Igel, F. Bernauer. <a href="info.html"><span class="icon"><i class="fas fa-circle-info"></i></span>Full info & guide</a>.
+          </div>
+        </div>
+        <div class="column is-12">
           <div class="card">
             <div class="card-header">
               <p class="card-header-title">
@@ -40,12 +48,21 @@
             <div class="card-content">
               <figure class="image">
                 <img class="lb" data-src="./figures/new/html_oszi.png"
-                     alt="Helicorder Drumplot"
+                     alt="Oscilloscope snapshot of the four ROMY ring lasers"
                      onerror="this.src='./figures/oops.png'">
               </figure>
               <div class="content mt-3">
                 <p class="is-size-7 has-text-grey">
-                  <strong>Helicorder Drumplot:</strong> 24-hour helicorder (drumplot) showing seismic activity and rotation signals stacked by hour. Displays seismic events, daily variations, and rotation spectra from the ROMY ring laser interferometer.
+                  <strong>Oscilloscope snapshot:</strong> Fast check of the operational health of ROMY’s four ring laser gyroscopes (trace numbering/colors):
+                </p>
+                <ul class="is-size-7 has-text-grey" style="margin-top:-0.5rem">
+                  <li><strong>1 — yellow:</strong> horizontal ring</li>
+                  <li><strong>2 — cyan:</strong> western ring</li>
+                  <li><strong>3 — purple:</strong> northern ring</li>
+                  <li><strong>4 — blue:</strong> eastern ring</li>
+                </ul>
+                <p class="is-size-7 has-text-grey" style="margin-top:0.25rem">
+                  Ideally, all traces show a sinusoid corresponding to the Sagnac beat note. Contrast (peak‑to‑peak) and DC offset reflect the current instrument settings.
                 </p>
               </div>
             </div>

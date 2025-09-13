@@ -2,10 +2,11 @@
 # -*- coding: utf-8 -*-
 """ROMY Monitor – Master Orchestrator
 
-Coordinates generation of all monitoring figures:
-    • Ring‑wise: sagnac spectra, rotation spectra, helicorder, combo spectra, raw sagnac signal
-    • Global / legacy: backscatter, beam walk, beat drift, environmentals, barometric
-    • Ancillary: oscilloscope snapshot, beam‑wander static assets, combined sagnac signals
+Coordinates generation of monitoring figures actually used on the website:
+    • Ring‑wise (retained): combined sagnac spectra (html_sagnacspectra_*) via make_spectra, raw sagnac signal (html_sagnacsignal_*).
+    • Removed: standalone rotation PSD (rotation_spectrum_*), sagnac_spectrum_*, helicorder_* and combo panels (html_rotationcombo_*), since seismic_noise page deprecated.
+    • Global: backscatter, beam walk, beam wander helicorder (for beam-wander page), beat drift, environmentals, barometric.
+    • Ancillary: oscilloscope snapshot, combined sagnac multi‑ring signals, live archive.
 
 CLI:
     python romy_master_monitor.py [RINGS...] [--date YYYY-MM-DD]
@@ -62,20 +63,17 @@ CFG = {}
 
 # ─────────── Script definitions ──────────────────────────────────────────
 SCRIPTS = {
-    "sagnac_spectrum": "romy_make_sagnac_spectrum.py",
-    # rotation spectra script (colour matched) expects [RING [DATE]]
-    "rotation_psd": "romy_make_rotation.py", 
-    "helicorder": "romy_make_helicorder.py",
-    "rotation_combo": "romy_make_rotation_combo.py",
-    "combined_spectra": "romy_make_spectra.py",
+    # Retained per‑ring
+    "combined_spectra": "romy_make_spectra.py",            # produces html_sagnacspectra_R*.png
+    "sagnac_signal": "romy_make_sagnacsignal.py",          # produces html_sagnacsignal_R*.png
+    # Global / ancillary
     "oscilloscope": "romy_make_oszi.py",
     "backscatter_full": "romy_make_backscatter_full.py",
     "beamwalk_full": "romy_make_beamwalk_full.py",
-    "beam_wander_helicorder": "romy_make_beam_wander_helicorder.py",  # Added new script
+    "beam_wander_helicorder": "romy_make_beam_wander_helicorder.py",
     "beatdrift_full": "romy_make_beatdrift_full.py",
     "environmentals_full": "romy_make_environmentals_full.py",
     "barometric_full": "romy_make_barometric_full.py",
-    "sagnac_signal": "romy_make_sagnacsignal.py",
     "sagnac_signals_combined": "romy_make_sagnac_signals_combined.py",
 }
 
@@ -123,37 +121,18 @@ def run_script(script_name, script_file, args=None, timeout=None):
 
 # ─────────── Helper: run ring-specific scripts ──────────────────────────
 def run_ring_scripts(ring):
-    """Run all ring-specific scripts for a given ring."""
+    """Run retained ring-specific scripts for a given ring."""
     ring_results = {}
-    
-    # Sequential execution for each ring (to avoid resource conflicts)
-    for script_type in ["sagnac_spectrum", "rotation_psd", "helicorder", "rotation_combo", "combined_spectra", "sagnac_signal"]:
+    for script_type in ["combined_spectra", "sagnac_signal"]:
         script_file = SCRIPTS[script_type]
         script_name = f"{script_type}_{ring}"
-        # Per‑script CLI conventions
-        if script_type == "rotation_psd":
-            # romy_make_rotation.py accepts optional ring (already per-ring here) and optional date
-            args = [ring, CFG["run_date"]]
-        elif script_type in {"sagnac_spectrum", "helicorder"}:
-            args = [ring, CFG["run_date"]]
-        elif script_type == "combined_spectra":
-            # romy_make_spectra.py <RING> <DATE>
-            args = [ring, CFG["run_date"]]
-        elif script_type == "sagnac_signal":
+        if script_type in {"combined_spectra", "sagnac_signal"}:
             args = [ring, CFG["run_date"]]
         else:
-            args = [ring, CFG["run_date"]]
-        
+            args = []
         success, stdout, stderr = run_script(script_name, script_file, args)
-        ring_results[script_type] = {
-            "success": success,
-            "stdout": stdout, 
-            "stderr": stderr
-        }
-        
-        # Small delay between scripts to reduce system load
-        time.sleep(2)
-    
+        ring_results[script_type] = {"success": success, "stdout": stdout, "stderr": stderr}
+        time.sleep(1)
     return ring, ring_results
 
 # ═══════════════════════════ main routine ════════════════════════════════
@@ -242,10 +221,10 @@ def main():
 
     # ─────────── Ensure ring image completeness (placeholders) ───────────
     def ensure_full_ring_set(run_date: str):
-        """Create placeholder images in new_figures for any missing ring outputs.
+        """Create placeholder images for required ring outputs only.
 
-        Expected per ring: rotation_spectrum, sagnac_spectrum, helicorder,
-        html_sagnacspectra, html_sagnacsignal.
+        Expected per ring now limited to html_sagnacspectra, html_sagnacsignal.
+        Legacy single spectra / helicorder / combo placeholders removed.
         """
         import matplotlib
         matplotlib.use('Agg')
@@ -253,12 +232,8 @@ def main():
         new_dir = REPO_ROOT / 'new_figures'
         new_dir.mkdir(exist_ok=True)
         expected_templates = [
-            'rotation_spectrum_R{r}.png',
-            'sagnac_spectrum_R{r}.png',
-            'helicorder_R{r}.png',
             'html_sagnacspectra_R{r}.png',
             'html_sagnacsignal_R{r}.png',
-            'html_rotationcombo_R{r}.png',
         ]
         for r in ['U','V','W','Z']:
             for tmpl in expected_templates:
@@ -284,12 +259,8 @@ def main():
             try: old.unlink()
             except Exception: pass
         expected_patterns = [
-            'rotation_spectrum_R*.png',
-            'sagnac_spectrum_R*.png',
-            'helicorder_R*.png',
             'html_sagnacspectra_R*.png',
             'html_sagnacsignal_R*.png',
-            'html_rotationcombo_R*.png',
             'html_oszi.png',
             'html_backscatter.png', 'html_beamwalk.png', 'html_beatdrift.png',
             'html_environmentals.png', 'html_romy_baro.png'
@@ -344,8 +315,7 @@ def main():
             ring_data = results[ring]
             successes = sum(1 for r in ring_data.values() if r.get("success", False))
             total_scripts = len(ring_data)
-            print(f"🔍 Ring {ring}: {successes}/{total_scripts} scripts successful")
-            
+            print(f"🔍 Ring {ring}: {successes}/{total_scripts} scripts successful (combined spectra + sagnac signal)")
             for script_type, result in ring_data.items():
                 status = "✅" if result.get("success", False) else "❌"
                 print(f"    {status} {script_type}")

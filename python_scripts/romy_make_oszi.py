@@ -52,6 +52,12 @@ CFG = dict(
     dpi          = 150,                 # output image DPI
     temp_file    = "tmp_oszi.bmp",      # temporary file name
     timeout      = 10,                  # connection timeout in seconds
+    # Fractional crop margins to trim UI from screenshot (0.0-0.4 typical)
+    # Positive values remove that fraction from each edge respectively
+    crop_top     = 0.07,
+    crop_bottom  = 0,
+    crop_left    = 0.07,
+    crop_right   = 0.13,
 )
 
 # ─────────── Helper: capture oscilloscope screenshot ────────────────────
@@ -99,6 +105,30 @@ def make_figure(image_path):
         # Load image
         ImageFile.LOAD_TRUNCATED_IMAGES = True
         img = Image.open(image_path).convert('RGBA')
+
+        # Crop a bit from the top and sides to remove UI buttons
+        def _apply_crop(pil_img):
+            w, h = pil_img.size
+            # Clamp crop fractions to [0, 0.4] to avoid excessive cropping
+            ct = max(0.0, min(0.4, float(CFG.get("crop_top", 0.12))))
+            cb = max(0.0, min(0.4, float(CFG.get("crop_bottom", 0.02))))
+            cl = max(0.0, min(0.4, float(CFG.get("crop_left", 0.06))))
+            cr = max(0.0, min(0.4, float(CFG.get("crop_right", 0.06))))
+            left   = int(round(w * cl))
+            right  = int(round(w * (1.0 - cr)))
+            top    = int(round(h * ct))
+            bottom = int(round(h * (1.0 - cb)))
+            # Ensure valid box
+            left = max(0, min(left, w - 2))
+            right = max(left + 1, min(right, w))
+            top = max(0, min(top, h - 2))
+            bottom = max(top + 1, min(bottom, h))
+            try:
+                return pil_img.crop((left, top, right, bottom))
+            except Exception:
+                return pil_img
+
+        img = _apply_crop(img)
         
         # Create figure
         fig, ax = plt.subplots(figsize=(12, 8))

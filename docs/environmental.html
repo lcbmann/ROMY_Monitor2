@@ -43,10 +43,16 @@
                      alt="Environmental Monitoring"
                      title="Click to view full size" />
               </figure>
-              <div class="content mt-3">
-                <p class="is-size-7 has-text-grey">
-                  <strong>Environmental Monitoring:</strong> Temperature, humidity, and other environmental conditions in the ROMY laboratory. These parameters affect laser stability and rotation measurements, so continuous monitoring helps identify environmental influences on data quality.
-                </p>
+              <div class="content mt-3 is-size-7 has-text-grey">
+                <p><strong>Summary:</strong> This plot serves as a summary of the critical environmental data for the horizontal ring. The time series panels (top to bottom) provide context for interpreting laser performance, stability, and drift sources over the previous day.</p>
+                <ul>
+                  <li><strong>1. Sagnac Beat Frequency:</strong> Unfiltered (grey), cleaned (black) and backscatter‑corrected (red) time series.</li>
+                  <li><strong>2. Temperatures:</strong> Corner shaft sensors PS5, PS7, PS9 plus central bottom (dark green, ~15 m depth, seasonally stable) and central upper shaft (light green, uninsulated, showing diurnal variation).</li>
+                  <li><strong>3. Hydrology & Precipitation:</strong> Near‑surface aquifer water level (main building, ~150 m from ROMY) and precipitation (moving mean + cumulative) from the local station.</li>
+                  <li><strong>4. Tiltmeter:</strong> Southern shaft tilt as 20 s averaged values, reduced by the first sample (relative change indicator).</li>
+                  <li><strong>5. Barometric Pressure & Infrasound:</strong> MB2005 absolute pressure (dark red) and high‑pass filtered infrasound channel (light red) showing rapid pressure fluctuations.</li>
+                  <li><strong>6. Relative Beam Position:</strong> Horizontal ring beam position in y and x (each reduced by first sample) indicating alignment and slow cavity geometry changes.</li>
+                </ul>
               </div>
             </div>
           </div>

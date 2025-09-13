@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ROMY Ring‑Laser Monitor - Information</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css" />
+  <script src="js/navigation.js"></script>
+</head>
+<body>
+  <section class="hero is-primary is-small hero-banner">
+    <div class="hero-body">
+      <div class="container has-text-centered">
+        <h1 class="title is-1 has-text-white">ROMY Ring‑Laser Monitor</h1>
+        <p class="subtitle is-4 has-text-white">Site Guide & Documentation</p>
+      </div>
+    </div>
+  </section>
+  <div id="navigation-placeholder"></div>
+
+  <section class="section">
+    <div class="container content is-size-6">
+      <h2 class="title is-3 has-text-primary"><i class="fas fa-circle-info mr-2"></i>Purpose</h2>
+      <p>This site provides near real‑time and recent historical monitoring products for the multicomponent ring‑laser gyroscope system <strong>ROMY</strong> (ROtational Motions in seismologY) near Munich, Germany. The focus is expert operational awareness: instrument health, data quality, dominant disturbances, and environmental coupling.</p>
+
+      <h3 class="title is-4 mt-5"><i class="fas fa-images mr-2"></i>Using the Figures</h3>
+      <ul>
+        <li>Images auto‑refresh (5–60 min cadence depending on page). A small cache‑buster query string forces reload.</li>
+        <li>Click any figure (cursor turns pointer) to open a larger lightbox view.</li>
+        <li>If a figure fails to generate, a placeholder image ("oops") is shown; persistent placeholders indicate upstream processing issues.</li>
+      </ul>
+
+      <h3 class="title is-4 mt-5"><i class="fas fa-sitemap mr-2"></i>Page Overview</h3>
+      <dl>
+        <dt><strong>Home</strong></dt>
+        <dd>Quick oscilloscope snapshot of the four active ring beat signals (immediate functional status).</dd>
+        <dt><strong>Sagnac Spectra</strong></dt>
+        <dd>Hourly Sagnac signal power spectral densities (PSD) per ring plus combined views for diurnal/operational drift assessment.</dd>
+        <dt><strong>Beam Wander</strong></dt>
+        <dd>Recent beam position evolution (alignment stability) and associated helicorder for context.</dd>
+        <dt><strong>Beat Drift</strong></dt>
+        <dd>14‑day evolution of Sagnac beat frequencies, maintenance / MLTI intervention markers, and MLTI density proxy.</dd>
+        <dt><strong>Backscatter</strong></dt>
+        <dd>Horizontal ring monobeam diagnostics, backscatter correction performance, amplitude & phase stability indicators.</dd>
+        <dt><strong>Environmental</strong></dt>
+        <dd>Key environmental drivers (temperature stratification, hydrology/precipitation, tilt, pressure/infrasound, beam position) relevant for drift origin analysis.</dd>
+        <dt><strong>Barometric</strong></dt>
+        <dd>Focused air pressure & infrasound monitoring (higher temporal detail / filtering variants).</dd>
+        <dt><strong>Live Data</strong></dt>
+        <dd>Direct access (or links) to raw / near real‑time channels and quick health indicators.</dd>
+        <dt><strong>Info</strong></dt>
+        <dd>This guide, credits, and reference material.</dd>
+      </dl>
+
+      <h3 class="title is-4 mt-5"><i class="fas fa-link mr-2"></i>Key References</h3>
+      <ul>
+        <li>Science Magazine Feature (2017): <a href="https://www.science.org/content/article/buried-lasers-will-sense-earths-spin-and-quakes-doing-twist" target="_blank" rel="noopener">Buried lasers will sense Earth's spin...</a></li>
+        <li>GJI Open Access Article (2021): <a href="https://doi.org/10.1093/gji/ggaa614" target="_blank" rel="noopener">ROMY: a multicomponent ring laser for geodesy and geophysics</a></li>
+      </ul>
+
+      <h3 class="title is-4 mt-5"><i class="fas fa-users mr-2"></i>Credits</h3>
+      <p class="is-size-7">Website design & implementation: <strong>Christopher Bürgmann</strong> | Scientific plotting / processing scripts: <strong>Andreas Brotzer</strong> | Concept & contributions: <strong>Heiner Igel</strong>, <strong>Felix Bernauer</strong>. Underlying research supported by the ROMY ERC Advanced Grant and institutional partners.</p>
+
+      <h3 class="title is-4 mt-5"><i class="fas fa-triangle-exclamation mr-2"></i>Operational Notes</h3>
+      <ul>
+        <li>Grey / empty intervals in spectra denote missing or unusable data (not low signal).</li>
+        <li>Vertical red (MLTI) or yellow (maintenance) bands annotate intervention periods; interpret adjacent frequency excursions cautiously.</li>
+        <li>Backscatter correction line (black dashed) should converge toward cleaned signal; divergence flags calibration drift.</li>
+        <li>Environmental correlation: inspect tilt / temperature shifts when long‑term Sagnac drifts accelerate.</li>
+      </ul>
+
+      <h3 class="title is-4 mt-5"><i class="fas fa-terminal mr-2"></i>Data Access</h3>
+      <p>For raw rotational / translational time series, contact the ROMY operations team or consult internal seedlink endpoints (not publicly listed here). Future public APIs may expose low‑latency rotational channels.</p>
+
+      <h3 class="title is-4 mt-5"><i class="fas fa-tools mr-2"></i>Planned Enhancements</h3>
+      <ul>
+        <li>Per‑figure historical archive links.</li>
+        <li>Automatic anomaly flagging (threshold & model‑based).</li>
+        <li>Overlay of predicted tidal / polar motion signatures.</li>
+        <li>Download buttons for last 24 h PNG / CSV exports.</li>
+      </ul>
+    </div>
+  </section>
+
+  <script>
+    // Lightbox support (reuse existing pattern if needed)
+    document.addEventListener('DOMContentLoaded', () => {
+      const overlay = document.createElement('div');
+      overlay.id = 'overlay';
+      overlay.innerHTML = '<img>';
+      document.body.appendChild(overlay);
+      const big = overlay.querySelector('img');
+      document.addEventListener('click', e => {
+        if (!e.target.classList.contains('lb')) return;
+        big.src = e.target.src;
+        overlay.classList.add('show');
+      });
+      overlay.addEventListener('click', () => overlay.classList.remove('show'));
+    });
+  </script>
+</body>
+</html>

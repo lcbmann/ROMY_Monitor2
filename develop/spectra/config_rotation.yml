@@ -1,0 +1,36 @@
+# Config for Andreas' make_spectra.py to generate rotation spectra for one day
+# Adjust paths if needed
+
+# Processing window (one day)
+tbeg: "2025-09-10 00:00:00"
+tend: "2025-09-10 23:59:59"
+
+# Data source (SDS archive)
+path_to_sds: "/import/freenas-ffb-01-data/romy_archive"
+
+# Seeds (BJ rotation channels) – start with North ring (V) as an example
+seeds:
+  - "BW.ROMY..BJV"
+
+# Output folders
+path_to_data_out: "/home/cbuergmann/romy_dev/ROMY_Monitor2/local_output/rotation_data"
+path_to_figures_out: "/home/cbuergmann/romy_dev/ROMY_Monitor2/local_output/rotation_plots/"
+
+# Spectra parameters
+tinterval: 3600
+toverlap: 0
+method: "welch"
+apply_average: true
+fraction_of_octave: 12
+averaging: "median"
+
+# Plot parameters
+fmin: 0.001
+fmax: 5.0
+cmap: "rainbow"
+alpha: 0.9
+data_unit: "rad/s"
+quality_filter: "good"
+
+# Response handling (usually BJ is already in rad/s)
+remove_response: false

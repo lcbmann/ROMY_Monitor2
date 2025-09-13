@@ -43,10 +43,16 @@
                      alt="Backscatter"
                      onerror="this.src='./figures/oops.png'">
               </figure>
-              <div class="content mt-3">
-                <p class="is-size-7 has-text-grey">
-                  <strong>Backscatter:</strong> Analysis of backscattered light in the ring laser cavity, showing scattered light intensity and stability measurements. Changes in backscatter can indicate mirror contamination, alignment issues, or environmental effects on the laser cavity.
-                </p>
+              <div class="content mt-3 is-size-7 has-text-grey">
+                <p><strong>Overview:</strong> The backscatter correction is applied to the horizontal ring data (only ring where the clockwise (CW) and counter‑clockwise (CCW) monobeams are recorded). The time series cover the previous day.</p>
+                <p><strong>Panel Guide (top to bottom):</strong></p>
+                <ul>
+                  <li><strong>1. Sagnac Beat Frequency:</strong> Combined signal (blue) and the two monobeams (red, orange). The backscatter‑corrected signal is the black dashed line.</li>
+                  <li><strong>2. AC Amplitude:</strong> Spectral peak amplitude at the Sagnac frequency (proxy for interferometric fringe modulation).</li>
+                  <li><strong>3. DC Amplitude:</strong> Mean (DC) level of the individual signals.</li>
+                  <li><strong>4. AC/DC Ratio:</strong> Ratio of AC to DC amplitudes (not exactly the optical contrast but a related stability indicator).</li>
+                  <li><strong>5. Unwrapped Phase Difference:</strong> Relative phase between the two monobeams after unwrapping; sensitive to backscatter and cavity perturbations.</li>
+                </ul>
               </div>
             </div>
           </div>

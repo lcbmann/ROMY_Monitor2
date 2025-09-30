@@ -17,6 +17,7 @@ from pathlib import Path
 import matplotlib
 matplotlib.use("Agg")                       # head-less rendering
 import matplotlib.pyplot as plt
+import numpy as np
 from PIL import Image, ImageFile
 
 # Oscilloscope library
@@ -58,6 +59,8 @@ CFG = dict(
     crop_bottom  = 0,
     crop_left    = 0.07,
     crop_right   = 0.13,
+    bottom_strip_frac  = 0.05,  # fraction of image height to shift
+    bottom_strip_shift = 0.08,  # fraction of width to offset slice to the right
 )
 
 # ─────────── Helper: capture oscilloscope screenshot ────────────────────
@@ -129,7 +132,29 @@ def make_figure(image_path):
                 return pil_img
 
         img = _apply_crop(img)
-        
+
+        # Shift the bottom strip to the right to reveal the on-screen labels
+        try:
+            arr = np.array(img)
+            if arr.ndim == 3 and arr.shape[2] == 4:
+                h, w, _ = arr.shape
+                strip_frac = float(CFG.get("bottom_strip_frac", 0.05))
+                shift_frac = float(CFG.get("bottom_strip_shift", CFG.get("crop_left", 0.07)))
+                strip_h = max(1, int(round(h * np.clip(strip_frac, 0.0, 0.2))))
+                shift_px = int(round(w * np.clip(shift_frac, 0.0, 0.5)))
+                if strip_h < h and shift_px > 0:
+                    strip = arr[-strip_h:, :].copy()
+                    # reset target region to opaque black
+                    arr[-strip_h:, :, :3] = 0
+                    arr[-strip_h:, :, 3] = 255
+                    arr[-strip_h:, shift_px:, :] = strip[:, : w - shift_px, :]
+                    img = Image.fromarray(arr)
+                    print(f"ℹ Bottom strip shifted {shift_px}px over {strip_h}px height")
+            else:
+                print("ℹ Skipped bottom strip shift (unexpected image mode)")
+        except Exception as exc:
+            print(f"✖ Bottom strip shift failed: {exc}")
+
         # Create figure
         fig, ax = plt.subplots(figsize=(12, 8))
         dt = datetime.utcnow()

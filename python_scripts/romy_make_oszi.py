@@ -174,6 +174,7 @@ def make_figure(image_path):
         img = _shift_bottom_strip(img)
         img = _apply_crop(img)
 
+
         # Create figure
         fig, ax = plt.subplots(figsize=(12, 8))
         dt = datetime.utcnow()

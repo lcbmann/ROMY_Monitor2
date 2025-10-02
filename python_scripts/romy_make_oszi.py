@@ -142,13 +142,23 @@ def make_figure(image_path):
                 shift_frac = float(CFG.get("bottom_strip_shift", CFG.get("crop_left", 0.07)))
                 strip_h = max(1, int(round(h * np.clip(strip_frac, 0.0, 0.2))))
                 shift_px = int(round(w * np.clip(shift_frac, 0.0, 0.5)))
-                if strip_h < h and shift_px > 0:
+                if strip_h < h and 0 < shift_px < w:
                     strip = arr[-strip_h:, :].copy()
-                    arr[-strip_h:, shift_px:, :] = strip[:, : w - shift_px, :]
-                    # Retain original content for the vacated columns so text stays visible
-                    arr[-strip_h:, :shift_px, :] = strip[:, :shift_px, :]
+                    shifted = np.zeros_like(strip)
+                    shifted[:, shift_px:, :] = strip[:, : w - shift_px, :]
+                    if strip_h < h - 1 and shift_px:
+                        filler_row = arr[-strip_h-1, :shift_px, :].copy()[np.newaxis, ...]
+                    else:
+                        filler_row = strip[0:1, :shift_px, :]
+                    if filler_row.size:
+                        filler = np.broadcast_to(filler_row, (strip_h, shift_px, strip.shape[2]))
+                        shifted[:, :shift_px, :] = filler
+                    arr[-strip_h:, :, :] = shifted
                     img = Image.fromarray(arr)
-                    print(f"ℹ Bottom strip shifted {shift_px}px over {strip_h}px height (no left mask)")
+                    print(
+                        "ℹ Bottom strip shifted "
+                        f"{shift_px}px over {strip_h}px height (left filled from row above)"
+                    )
 
             else:
                 print("ℹ Skipped bottom strip shift (unexpected image mode)")

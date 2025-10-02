@@ -125,12 +125,13 @@ def make_sagnac_figure(freq: np.ndarray,
 
     fig, ax = plt.subplots(1, 1, figsize=(12, 8))
 
-    # Draw from hour 23 down to 00 so red-ish late hours don't cover everything
-    draw_order = sorted(hours_present, reverse=True)
+    # Draw chronologically but ensure later hours appear on top via z-order
+    draw_order = sorted(hours_present)
 
     handles = []
     labels  = []
     for h in draw_order:
+        z_base = 10 + h  # keep later hours visually on top
         line, = ax.plot(
             freq,
             hour_psds[h],
@@ -138,7 +139,7 @@ def make_sagnac_figure(freq: np.ndarray,
             alpha=CFG["alpha"],
             lw=1.0,
             label=f"{h:02d}:00",
-            zorder=1,  # all the same; visual stacking is set by draw order
+            zorder=z_base,
         )
         handles.append(line)
         labels.append(f"{h:02d}:00")

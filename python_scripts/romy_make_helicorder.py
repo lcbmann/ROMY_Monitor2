@@ -126,6 +126,7 @@ def make_helicorder(tr, tints, dt, title):
     ax.set_yticklabels(yticklabels)
     ax.grid(False)
     ax.set_title(title)
+    ax.minorticks_on()
 
     # >>> Tight y-limits so 00:00 and 23:00 fill the frame
     m = 0.8

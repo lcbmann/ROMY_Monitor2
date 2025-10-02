@@ -89,3 +89,11 @@
 .navbar-item.disabled i {
   color: #b0b0b0 !important;
 }
+
+/* Caption text: increase size for readability across pages */
+.card .content .is-size-7.has-text-grey,
+.card .is-size-7.has-text-grey,
+.is-size-7.has-text-grey {
+  font-size: 0.95rem !important; /* was ~0.75rem via Bulma is-size-7 */
+  line-height: 1.5;
+}

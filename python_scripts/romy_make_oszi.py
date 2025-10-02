@@ -149,6 +149,7 @@ def make_figure(image_path):
                     arr[-strip_h:, :shift_px, :] = strip[:, :shift_px, :]
                     img = Image.fromarray(arr)
                     print(f"ℹ Bottom strip shifted {shift_px}px over {strip_h}px height (no left mask)")
+
             else:
                 print("ℹ Skipped bottom strip shift (unexpected image mode)")
         except Exception as exc:

@@ -35,7 +35,6 @@ import numpy as np
 import matplotlib
 matplotlib.use("Agg")  # headless
 import matplotlib.pyplot as plt
-from matplotlib.colors import Normalize, ListedColormap
 from matplotlib.cm import get_cmap
 from obspy import UTCDateTime
 
@@ -152,24 +151,57 @@ def plot_colored_psd_only(sp: spectra, cfg: dict, out_png: Path):
     if not hasattr(sp, "collection"):
         raise AttributeError("No collection available. Run get_collection() first.")
 
-    # Build discrete colormap with one color per interval
-    n_intervals = len(sp.collection.get("time", []))
+    # Build discrete colormap with one color per hour interval (match helicorder)
+    interval_times = sp.collection.get("time", [])
+    n_intervals = len(interval_times)
+    total_intervals = len(getattr(sp, "time_intervals", [])) or n_intervals
     base_cmap = get_cmap(cfg.get("cmap", "rainbow"))
-    colors = base_cmap(np.linspace(0, 1, max(n_intervals, 2)))
-    discrete_cmap = ListedColormap(list(colors))
-    color_norm = Normalize(vmin=-0.5, vmax=n_intervals - 0.5)  # for parity with old code (even if no colorbar)
+    colors = base_cmap(np.linspace(0, 1, max(total_intervals, 2)))
+
+    # Map each spectrum midpoint to its hour index so PSD colors match helicorder colors
+    t_interval = float(cfg.get("tinterval", 3600))
+    if getattr(sp, "time_intervals", None):
+        day_start = sp.time_intervals[0][0]
+    else:
+        day_start = interval_times[0] if interval_times else None
+
+    def _hour_index(midpoint):
+        if day_start is None:
+            return None
+        try:
+            delta = float(midpoint - day_start)
+        except Exception:
+            return None
+        if not np.isfinite(delta):
+            return None
+        return int(np.floor(delta / t_interval + 1e-6))
+
+    # Fallback dictionary if quality filtering removes all intervals
+    time_to_hour = {}
+    for idx, midpoint in enumerate(interval_times):
+        hour_idx = _hour_index(midpoint)
+        if hour_idx is not None:
+            time_to_hour[idx] = hour_idx
 
     # Build quality mask like the old function
     quality_filter = cfg.get("quality_filter", None)
     if quality_filter is not None and "quality" in sp.collection:
         quality_mask = [q == quality_filter for q in sp.collection["quality"]]
+        use_quality = any(quality_mask)
+        if not use_quality and quality_filter:
+            print("   ! No spectra met the quality filter; keeping original colors for review")
     else:
-        # fall back to accepting all intervals
+        use_quality = False
         quality_mask = [True] * n_intervals
 
     # Gap detection (same logic as in plot_spectra_and_helicorder)
     gap_intervals = []
-    for i, ((t1, t2), is_good_quality) in enumerate(zip(sp.time_intervals, quality_mask)):
+    quality_iter = quality_mask
+    if len(quality_iter) < len(sp.time_intervals):
+        # pad so zip does not truncate
+        quality_iter = quality_iter + [True] * (len(sp.time_intervals) - len(quality_iter))
+
+    for i, ((t1, t2), is_good_quality) in enumerate(zip(sp.time_intervals, quality_iter)):
         tr_slice = sp.tr.slice(t1, t2)
         data = tr_slice.data
         has_gaps = False
@@ -195,7 +227,7 @@ def plot_colored_psd_only(sp: spectra, cfg: dict, out_png: Path):
                         break
 
         # honor quality filter by greying out non-matching spectra
-        if not has_gaps and not is_good_quality:
+        if not has_gaps and use_quality and not is_good_quality:
             has_gaps = True
 
         if has_gaps:
@@ -206,12 +238,24 @@ def plot_colored_psd_only(sp: spectra, cfg: dict, out_png: Path):
 
     # Plot each interval spectrum with color or grey
     alpha = float(cfg.get("alpha", 0.8))
-    for i, (f, s) in enumerate(zip(sp.collection.get("freq", []), sp.collection.get("spec", []))):
+    gap_count = 0
+    for i, (f, s, midpoint) in enumerate(zip(sp.collection.get("freq", []),
+                                             sp.collection.get("spec", []),
+                                             interval_times)):
+        hour_idx = time_to_hour.get(i)
+        if hour_idx is None:
+            hour_idx = i
+        hour_idx = max(0, min(hour_idx, len(colors) - 1))
         if i in gap_intervals:
             color = "grey"
+            gap_count += 1
         else:
-            color = discrete_cmap(i / max(n_intervals - 1, 1))
+            color = colors[hour_idx]
         ax.plot(f, s, color=color, alpha=alpha, lw=1)
+
+    print(f"   ↳ PSD color map summary: {n_intervals} spectra, {gap_count} greyed (gaps/filtered), cmap='{cfg.get('cmap', 'rainbow')}'")
+    if gap_count == n_intervals and n_intervals:
+        print("     • All traces grey — please share this log line so we can inspect the gap logic.")
 
     # Axes setup (match old left-panel)
     ax.set_xscale("log")

@@ -144,12 +144,12 @@ def make_figure(image_path):
                 shift_px = int(round(w * np.clip(shift_frac, 0.0, 0.5)))
                 if strip_h < h and shift_px > 0:
                     strip = arr[-strip_h:, :].copy()
-                    # reset target region to opaque black
-                    arr[-strip_h:, :, :3] = 0
-                    arr[-strip_h:, :, 3] = 255
                     arr[-strip_h:, shift_px:, :] = strip[:, : w - shift_px, :]
+                    # Retain original content for the vacated columns so text stays visible
+                    arr[-strip_h:, :shift_px, :] = strip[:, :shift_px, :]
                     img = Image.fromarray(arr)
-                    print(f"ℹ Bottom strip shifted {shift_px}px over {strip_h}px height")
+                    print(f"ℹ Bottom strip shifted {shift_px}px over {strip_h}px height (no left mask)")
+
             else:
                 print("ℹ Skipped bottom strip shift (unexpected image mode)")
         except Exception as exc:

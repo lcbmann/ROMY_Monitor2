@@ -109,8 +109,8 @@ def make_figure(image_path):
         ImageFile.LOAD_TRUNCATED_IMAGES = True
         img = Image.open(image_path).convert('RGBA')
 
-        # Crop a bit from the top and sides to remove UI buttons
         def _apply_crop(pil_img):
+            """Crop a bit from the top and sides to remove UI buttons."""
             w, h = pil_img.size
             # Clamp crop fractions to [0, 0.4] to avoid excessive cropping
             ct = max(0.0, min(0.4, float(CFG.get("crop_top", 0.12))))
@@ -131,39 +131,49 @@ def make_figure(image_path):
             except Exception:
                 return pil_img
 
+        def _shift_bottom_strip(pil_img):
+            """Shift the bottom strip rightward before cropping to retain labels."""
+            try:
+                arr = np.array(pil_img)
+                if arr.ndim == 3 and arr.shape[2] == 4:
+                    h, w, _ = arr.shape
+                    strip_frac = float(CFG.get("bottom_strip_frac", 0.05))
+                    shift_frac = float(CFG.get("bottom_strip_shift", CFG.get("crop_left", 0.07)))
+                    strip_h = max(1, int(round(h * np.clip(strip_frac, 0.0, 0.2))))
+                    shift_px = int(round(w * np.clip(shift_frac, 0.0, 0.5)))
+                    if strip_h < h and 0 < shift_px < w:
+                        strip = arr[-strip_h:, :].copy()
+                        shifted = np.zeros_like(strip)
+                        shifted[:, shift_px:, :] = strip[:, : w - shift_px, :]
+                        if strip_h < h - 1 and shift_px:
+                            filler_row = arr[-strip_h-1, :shift_px, :].copy()[np.newaxis, ...]
+                        else:
+                            filler_row = strip[0:1, :shift_px, :]
+                        if filler_row.size:
+                            filler = np.broadcast_to(
+                                filler_row,
+                                (strip_h, shift_px, strip.shape[2]),
+                            )
+                            shifted[:, :shift_px, :] = filler
+                        arr[-strip_h:, :, :] = shifted
+                        print(
+                            "ℹ Bottom strip shifted "
+                            f"{shift_px}px over {strip_h}px height (left filled from row above)"
+                        )
+                        return Image.fromarray(arr)
+                    print(
+                        "ℹ Skipped bottom strip shift (strip outside bounds): "
+                        f"strip_h={strip_h}, shift_px={shift_px}, image={w}x{h}"
+                    )
+                else:
+                    print("ℹ Skipped bottom strip shift (unexpected image mode)")
+            except Exception as exc:
+                print(f"✖ Bottom strip shift failed: {exc}")
+            return pil_img
+
+        img = _shift_bottom_strip(img)
         img = _apply_crop(img)
 
-        # Shift the bottom strip to the right to reveal the on-screen labels
-        try:
-            arr = np.array(img)
-            if arr.ndim == 3 and arr.shape[2] == 4:
-                h, w, _ = arr.shape
-                strip_frac = float(CFG.get("bottom_strip_frac", 0.05))
-                shift_frac = float(CFG.get("bottom_strip_shift", CFG.get("crop_left", 0.07)))
-                strip_h = max(1, int(round(h * np.clip(strip_frac, 0.0, 0.2))))
-                shift_px = int(round(w * np.clip(shift_frac, 0.0, 0.5)))
-                if strip_h < h and 0 < shift_px < w:
-                    strip = arr[-strip_h:, :].copy()
-                    shifted = np.zeros_like(strip)
-                    shifted[:, shift_px:, :] = strip[:, : w - shift_px, :]
-                    if strip_h < h - 1 and shift_px:
-                        filler_row = arr[-strip_h-1, :shift_px, :].copy()[np.newaxis, ...]
-                    else:
-                        filler_row = strip[0:1, :shift_px, :]
-                    if filler_row.size:
-                        filler = np.broadcast_to(filler_row, (strip_h, shift_px, strip.shape[2]))
-                        shifted[:, :shift_px, :] = filler
-                    arr[-strip_h:, :, :] = shifted
-                    img = Image.fromarray(arr)
-                    print(
-                        "ℹ Bottom strip shifted "
-                        f"{shift_px}px over {strip_h}px height (left filled from row above)"
-                    )
-
-            else:
-                print("ℹ Skipped bottom strip shift (unexpected image mode)")
-        except Exception as exc:
-            print(f"✖ Bottom strip shift failed: {exc}")
 
         # Create figure
         fig, ax = plt.subplots(figsize=(12, 8))

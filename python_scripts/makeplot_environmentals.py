@@ -619,7 +619,7 @@ def __makeplot(bws):
         ax[0].set_ylim(f_min-0.001, f_max+0.001)
 
         ax[0].ticklabel_format(useOffset=False)
-        ax[0].set_ylabel(f"R{config['ring']} $\delta f$ (Hz)", fontsize=font)
+        ax[0].set_ylabel("RZ $\delta f$ (HZ)", fontsize=font)
     except:
         pass
 

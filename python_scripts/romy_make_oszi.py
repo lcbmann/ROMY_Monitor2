@@ -159,6 +159,7 @@ def make_figure(image_path):
                         "ℹ Bottom strip shifted "
                         f"{shift_px}px over {strip_h}px height (left filled from row above)"
                     )
+
             else:
                 print("ℹ Skipped bottom strip shift (unexpected image mode)")
         except Exception as exc:

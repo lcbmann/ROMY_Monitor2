@@ -1,159 +1,140 @@
 {
-  "generated_at": "2025-09-13T00:04:23Z",
+  "generated_at": "2025-09-30T18:15:33Z",
   "retention_days": 7,
   "dates": [
-    "2025-09-13",
-    "2025-09-12",
-    "2025-09-11",
-    "2025-09-10",
-    "2025-09-09",
-    "2025-09-08",
-    "2025-09-07",
-    "2025-09-06"
+    "2025-09-30",
+    "2025-09-29",
+    "2025-09-28",
+    "2025-09-27",
+    "2025-09-26",
+    "2025-09-25",
+    "2025-09-24"
   ],
   "images": {
-    "2025-09-13": {
+    "2025-09-30": {
       "Z": {
-        "helicorder": "figures/live/2025-09-13/helicorder_live_RZ_2025-09-13.png",
-        "rotation": "figures/live/2025-09-13/rotation_spectrum_live_RZ_2025-09-13.png"
+        "helicorder": "figures/live/2025-09-30/helicorder_live_RZ_2025-09-30.png",
+        "rotation": "figures/live/2025-09-30/rotation_spectrum_live_RZ_2025-09-30.png"
       },
       "U": {
-        "helicorder": "figures/live/2025-09-13/helicorder_live_RU_2025-09-13.png",
-        "rotation": "figures/live/2025-09-13/rotation_spectrum_live_RU_2025-09-13.png"
+        "helicorder": "figures/live/2025-09-30/helicorder_live_RU_2025-09-30.png",
+        "rotation": "figures/live/2025-09-30/rotation_spectrum_live_RU_2025-09-30.png"
       },
       "V": {
-        "helicorder": "figures/live/2025-09-13/helicorder_live_RV_2025-09-13.png",
-        "rotation": "figures/live/2025-09-13/rotation_spectrum_live_RV_2025-09-13.png"
+        "helicorder": "figures/live/2025-09-30/helicorder_live_RV_2025-09-30.png",
+        "rotation": "figures/live/2025-09-30/rotation_spectrum_live_RV_2025-09-30.png"
       },
       "W": {
-        "helicorder": "figures/live/2025-09-13/helicorder_live_RW_2025-09-13.png",
-        "rotation": "figures/live/2025-09-13/rotation_spectrum_live_RW_2025-09-13.png"
+        "helicorder": "figures/live/2025-09-30/helicorder_live_RW_2025-09-30.png",
+        "rotation": "figures/live/2025-09-30/rotation_spectrum_live_RW_2025-09-30.png"
       }
     },
-    "2025-09-12": {
+    "2025-09-29": {
       "Z": {
-        "helicorder": "figures/live/2025-09-12/helicorder_live_RZ_2025-09-12.png",
-        "rotation": "figures/live/2025-09-12/rotation_spectrum_live_RZ_2025-09-12.png"
+        "helicorder": "figures/live/2025-09-29/helicorder_live_RZ_2025-09-29.png",
+        "rotation": "figures/live/2025-09-29/rotation_spectrum_live_RZ_2025-09-29.png"
       },
       "U": {
-        "helicorder": "figures/live/2025-09-12/helicorder_live_RU_2025-09-12.png",
-        "rotation": "figures/live/2025-09-12/rotation_spectrum_live_RU_2025-09-12.png"
+        "helicorder": "figures/live/2025-09-29/helicorder_live_RU_2025-09-29.png",
+        "rotation": "figures/live/2025-09-29/rotation_spectrum_live_RU_2025-09-29.png"
       },
       "V": {
-        "helicorder": "figures/live/2025-09-12/helicorder_live_RV_2025-09-12.png",
-        "rotation": "figures/live/2025-09-12/rotation_spectrum_live_RV_2025-09-12.png"
+        "helicorder": "figures/live/2025-09-29/helicorder_live_RV_2025-09-29.png",
+        "rotation": "figures/live/2025-09-29/rotation_spectrum_live_RV_2025-09-29.png"
       },
       "W": {
-        "helicorder": "figures/live/2025-09-12/helicorder_live_RW_2025-09-12.png",
-        "rotation": "figures/live/2025-09-12/rotation_spectrum_live_RW_2025-09-12.png"
+        "helicorder": "figures/live/2025-09-29/helicorder_live_RW_2025-09-29.png",
+        "rotation": "figures/live/2025-09-29/rotation_spectrum_live_RW_2025-09-29.png"
       }
     },
-    "2025-09-11": {
+    "2025-09-28": {
       "Z": {
-        "helicorder": "figures/live/2025-09-11/helicorder_live_RZ_2025-09-11.png",
-        "rotation": "figures/live/2025-09-11/rotation_spectrum_live_RZ_2025-09-11.png"
+        "helicorder": "figures/live/2025-09-28/helicorder_live_RZ_2025-09-28.png",
+        "rotation": "figures/live/2025-09-28/rotation_spectrum_live_RZ_2025-09-28.png"
       },
       "U": {
-        "helicorder": "figures/live/2025-09-11/helicorder_live_RU_2025-09-11.png",
-        "rotation": "figures/live/2025-09-11/rotation_spectrum_live_RU_2025-09-11.png"
+        "helicorder": "figures/live/2025-09-28/helicorder_live_RU_2025-09-28.png",
+        "rotation": "figures/live/2025-09-28/rotation_spectrum_live_RU_2025-09-28.png"
       },
       "V": {
-        "helicorder": "figures/live/2025-09-11/helicorder_live_RV_2025-09-11.png",
-        "rotation": "figures/live/2025-09-11/rotation_spectrum_live_RV_2025-09-11.png"
+        "helicorder": "figures/live/2025-09-28/helicorder_live_RV_2025-09-28.png",
+        "rotation": "figures/live/2025-09-28/rotation_spectrum_live_RV_2025-09-28.png"
       },
       "W": {
-        "helicorder": "figures/live/2025-09-11/helicorder_live_RW_2025-09-11.png",
-        "rotation": "figures/live/2025-09-11/rotation_spectrum_live_RW_2025-09-11.png"
+        "helicorder": "figures/live/2025-09-28/helicorder_live_RW_2025-09-28.png",
+        "rotation": "figures/live/2025-09-28/rotation_spectrum_live_RW_2025-09-28.png"
       }
     },
-    "2025-09-10": {
+    "2025-09-27": {
       "Z": {
-        "helicorder": "figures/live/2025-09-10/helicorder_live_RZ_2025-09-10.png",
-        "rotation": "figures/live/2025-09-10/rotation_spectrum_live_RZ_2025-09-10.png"
+        "helicorder": "figures/live/2025-09-27/helicorder_live_RZ_2025-09-27.png",
+        "rotation": "figures/live/2025-09-27/rotation_spectrum_live_RZ_2025-09-27.png"
       },
       "U": {
-        "helicorder": "figures/live/2025-09-10/helicorder_live_RU_2025-09-10.png",
-        "rotation": "figures/live/2025-09-10/rotation_spectrum_live_RU_2025-09-10.png"
+        "helicorder": "figures/live/2025-09-27/helicorder_live_RU_2025-09-27.png",
+        "rotation": "figures/live/2025-09-27/rotation_spectrum_live_RU_2025-09-27.png"
       },
       "V": {
-        "helicorder": "figures/live/2025-09-10/helicorder_live_RV_2025-09-10.png",
-        "rotation": "figures/live/2025-09-10/rotation_spectrum_live_RV_2025-09-10.png"
+        "helicorder": "figures/live/2025-09-27/helicorder_live_RV_2025-09-27.png",
+        "rotation": "figures/live/2025-09-27/rotation_spectrum_live_RV_2025-09-27.png"
       },
       "W": {
-        "helicorder": "figures/live/2025-09-10/helicorder_live_RW_2025-09-10.png",
-        "rotation": "figures/live/2025-09-10/rotation_spectrum_live_RW_2025-09-10.png"
+        "helicorder": "figures/live/2025-09-27/helicorder_live_RW_2025-09-27.png",
+        "rotation": "figures/live/2025-09-27/rotation_spectrum_live_RW_2025-09-27.png"
       }
     },
-    "2025-09-09": {
+    "2025-09-26": {
       "Z": {
-        "helicorder": "figures/live/2025-09-09/helicorder_live_RZ_2025-09-09.png",
-        "rotation": "figures/live/2025-09-09/rotation_spectrum_live_RZ_2025-09-09.png"
+        "helicorder": "figures/live/2025-09-26/helicorder_live_RZ_2025-09-26.png",
+        "rotation": "figures/live/2025-09-26/rotation_spectrum_live_RZ_2025-09-26.png"
       },
       "U": {
-        "helicorder": "figures/live/2025-09-09/helicorder_live_RU_2025-09-09.png",
-        "rotation": "figures/live/2025-09-09/rotation_spectrum_live_RU_2025-09-09.png"
+        "helicorder": "figures/live/2025-09-26/helicorder_live_RU_2025-09-26.png",
+        "rotation": "figures/live/2025-09-26/rotation_spectrum_live_RU_2025-09-26.png"
       },
       "V": {
-        "helicorder": "figures/live/2025-09-09/helicorder_live_RV_2025-09-09.png",
-        "rotation": "figures/live/2025-09-09/rotation_spectrum_live_RV_2025-09-09.png"
+        "helicorder": "figures/live/2025-09-26/helicorder_live_RV_2025-09-26.png",
+        "rotation": "figures/live/2025-09-26/rotation_spectrum_live_RV_2025-09-26.png"
       },
       "W": {
-        "helicorder": "figures/live/2025-09-09/helicorder_live_RW_2025-09-09.png",
-        "rotation": "figures/live/2025-09-09/rotation_spectrum_live_RW_2025-09-09.png"
+        "helicorder": "figures/live/2025-09-26/helicorder_live_RW_2025-09-26.png",
+        "rotation": "figures/live/2025-09-26/rotation_spectrum_live_RW_2025-09-26.png"
       }
     },
-    "2025-09-08": {
+    "2025-09-25": {
       "Z": {
-        "helicorder": "figures/live/2025-09-08/helicorder_live_RZ_2025-09-08.png",
-        "rotation": "figures/live/2025-09-08/rotation_spectrum_live_RZ_2025-09-08.png"
+        "helicorder": "figures/live/2025-09-25/helicorder_live_RZ_2025-09-25.png",
+        "rotation": "figures/live/2025-09-25/rotation_spectrum_live_RZ_2025-09-25.png"
       },
       "U": {
-        "helicorder": "figures/live/2025-09-08/helicorder_live_RU_2025-09-08.png",
-        "rotation": "figures/live/2025-09-08/rotation_spectrum_live_RU_2025-09-08.png"
+        "helicorder": "figures/live/2025-09-25/helicorder_live_RU_2025-09-25.png",
+        "rotation": "figures/live/2025-09-25/rotation_spectrum_live_RU_2025-09-25.png"
       },
       "V": {
-        "helicorder": "figures/live/2025-09-08/helicorder_live_RV_2025-09-08.png",
-        "rotation": "figures/live/2025-09-08/rotation_spectrum_live_RV_2025-09-08.png"
+        "helicorder": "figures/live/2025-09-25/helicorder_live_RV_2025-09-25.png",
+        "rotation": "figures/live/2025-09-25/rotation_spectrum_live_RV_2025-09-25.png"
       },
       "W": {
-        "helicorder": "figures/live/2025-09-08/helicorder_live_RW_2025-09-08.png",
-        "rotation": "figures/live/2025-09-08/rotation_spectrum_live_RW_2025-09-08.png"
+        "helicorder": "figures/live/2025-09-25/helicorder_live_RW_2025-09-25.png",
+        "rotation": "figures/live/2025-09-25/rotation_spectrum_live_RW_2025-09-25.png"
       }
     },
-    "2025-09-07": {
+    "2025-09-24": {
       "Z": {
-        "helicorder": "figures/live/2025-09-07/helicorder_live_RZ_2025-09-07.png",
-        "rotation": "figures/live/2025-09-07/rotation_spectrum_live_RZ_2025-09-07.png"
+        "helicorder": "figures/live/2025-09-24/helicorder_live_RZ_2025-09-24.png",
+        "rotation": "figures/live/2025-09-24/rotation_spectrum_live_RZ_2025-09-24.png"
       },
       "U": {
-        "helicorder": "figures/live/2025-09-07/helicorder_live_RU_2025-09-07.png",
-        "rotation": "figures/live/2025-09-07/rotation_spectrum_live_RU_2025-09-07.png"
+        "helicorder": "figures/live/2025-09-24/helicorder_live_RU_2025-09-24.png",
+        "rotation": "figures/live/2025-09-24/rotation_spectrum_live_RU_2025-09-24.png"
       },
       "V": {
-        "helicorder": "figures/live/2025-09-07/helicorder_live_RV_2025-09-07.png",
-        "rotation": "figures/live/2025-09-07/rotation_spectrum_live_RV_2025-09-07.png"
+        "helicorder": "figures/live/2025-09-24/helicorder_live_RV_2025-09-24.png",
+        "rotation": "figures/live/2025-09-24/rotation_spectrum_live_RV_2025-09-24.png"
       },
       "W": {
-        "helicorder": "figures/live/2025-09-07/helicorder_live_RW_2025-09-07.png",
-        "rotation": "figures/live/2025-09-07/rotation_spectrum_live_RW_2025-09-07.png"
-      }
-    },
-    "2025-09-06": {
-      "Z": {
-        "helicorder": "figures/live/2025-09-06/helicorder_live_RZ_2025-09-06.png",
-        "rotation": "figures/live/2025-09-06/rotation_spectrum_live_RZ_2025-09-06.png"
-      },
-      "U": {
-        "helicorder": "figures/live/2025-09-06/helicorder_live_RU_2025-09-06.png",
-        "rotation": "figures/live/2025-09-06/rotation_spectrum_live_RU_2025-09-06.png"
-      },
-      "V": {
-        "helicorder": "figures/live/2025-09-06/helicorder_live_RV_2025-09-06.png",
-        "rotation": "figures/live/2025-09-06/rotation_spectrum_live_RV_2025-09-06.png"
-      },
-      "W": {
-        "helicorder": "figures/live/2025-09-06/helicorder_live_RW_2025-09-06.png",
-        "rotation": "figures/live/2025-09-06/rotation_spectrum_live_RW_2025-09-06.png"
+        "helicorder": "figures/live/2025-09-24/helicorder_live_RW_2025-09-24.png",
+        "rotation": "figures/live/2025-09-24/rotation_spectrum_live_RW_2025-09-24.png"
       }
     }
   }
